@@ -13,9 +13,20 @@
 
 void setup(){
   
+  // Class tests
+  
+  // Player class test
+  /*
+  Player player = new Player();
+  println(player.location);
+  */
 }
 
 
 void draw(){
+  // Class tests
+  
+  // Player class test
+  
   
 }

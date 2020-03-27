@@ -12,5 +12,13 @@
 
 
 class Player{
+  int score;
+  PVector location;
+  int lives;
   
+  Player(){
+    this.score = 0;
+    this.location = new PVector(width / 2, height / 2);
+    this.lives = 3;
+  }
 }
