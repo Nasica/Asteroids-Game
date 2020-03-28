@@ -1,0 +1,24 @@
+Class Name: Asteroid
+
+Description: The asteroids that the player needs to destroy
+
+Attributes:(-) int      size                    // 1=small, 2=medium, other=larg
+           (-) int      MAX_SPEED               // Maximum speed an asteroid can move
+           (-) int      rotationSpeed           // Unsure if this is needed
+           (-) PVector  location
+           (-) PVector  velocity
+           (-) PImage   AsteroidImg
+
+Methods:   (C) Asteroid(int)                    // Basic constructor with int size 
+                                                //(created at random offscreen location)
+           (C) Asteroid(int PVector PVector)    // Constructor with creation at specified location 
+                                                // with size int
+
+           (+) getLocation(): PVector
+           (+) getVelocity(): Pvector
+           (+) setLocation(PVector)             // Sets the objects location
+           (+) drawAsteroid()                   // Draws the object to the screen
+           (+) updatePosition                   // updates the objects location based on its velocity
+           (-) rotateAsteroid()                 // Not yet implemented
+           (-) setImage()                       // Sets the objects image based on its size
+
