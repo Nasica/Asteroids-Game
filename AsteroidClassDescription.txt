@@ -7,7 +7,8 @@ Attributes:(-) int      size                    // 1=small, 2=medium, other=larg
            (-) int      rotationSpeed           // Unsure if this is needed
            (-) PVector  location
            (-) PVector  velocity
-           (-) PImage   AsteroidImg
+           (-) PImage   asteroidImg
+           (-) PShape   collisionMesh           // Use its .contain() method for calculating
 
 Methods:   (C) Asteroid(int)                    // Basic constructor with int size 
                                                 //(created at random offscreen location)
@@ -21,4 +22,6 @@ Methods:   (C) Asteroid(int)                    // Basic constructor with int si
            (+) updatePosition                   // updates the objects location based on its velocity
            (-) rotateAsteroid()                 // Not yet implemented
            (-) setImage()                       // Sets the objects image based on its size
-
+           (-) createCollisionMesh()            // Creates the collisionMesh object based on 
+                                                // the asteroids location
+           (

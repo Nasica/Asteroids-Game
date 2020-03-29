@@ -18,17 +18,24 @@ class Asteroid{
     PVector location;
     PVector velocity;
     PImage asteroidImg;
-
+    PShape collisionMesh;
+    int collisionMeshDetail = 10;
+    float rotationIncrement = TWO_PI/collisionMeshDetail;
+    float radCollisionMesh;
 
     public Asteroid(int size) {
         this.size = size;
         
         //Test code
         this.location = new PVector(200, 200);
-        this.velocity = new PVector(5,0);
+        this.velocity = new PVector(0,0);
         //
-
+        
         setImage();
+        radCollisionMesh = asteroidImg.width / 4;
+        collisionMesh = new PShape(PShape.PATH);
+        collisionMesh.setVisible(true);
+        createCollisionMesh();
     }
     
 
@@ -57,6 +64,19 @@ class Asteroid{
     }
 
 
+    /**
+    * Gets the collision mesh for the objects current location
+    * @return       Objects PShape to be used with its .contains() method for collision calculations  
+    */
+    public PShape getCollisionMesh(){
+        return this.collisionMesh;
+    }
+
+
+    /**
+     * Set the location of the object
+     * @param location      The location the object is to be updated to 
+     */
     public void setLocation(PVector location){
         this.location = location;
     }
@@ -75,6 +95,41 @@ class Asteroid{
      */
     public void updatePosition(){
         location.add(velocity);
+        updateCollisionMesh();
+    }
+
+
+    private void createCollisionMesh(){
+        // If the collision mesh hasn't been initialised create it and its verticies else
+        // update the verticies to its new location
+        //collisionMesh.vertex(location.x, location.y);
+        //collisionMesh.vertex(location.x + asteroidImg.width, location.y);
+        //collisionMesh.vertex(location.x + asteroidImg.width, location.y + asteroidImg.height);
+        //collisionMesh.vertex(location.x, location.y + asteroidImg.height);
+        
+        for(int i = 0; i < collisionMeshDetail; i++){
+            float angle = i * rotationIncrement;
+            float x = cos(angle);
+            float y = sin(angle);
+            collisionMesh.vertex((x * radCollisionMesh) + this.location.x + asteroidImg.width/2, 
+                                 (y * radCollisionMesh) + this.location.y + asteroidImg.height/2);
+        }
+    }
+
+
+    private void updateCollisionMesh(){
+        //collisionMesh.setVertex(0, new PVector(location.x, location.y));
+        //collisionMesh.setVertex(1, new PVector(location.x + asteroidImg.width, location.y));
+        //collisionMesh.setVertex(2, new PVector(location.x + asteroidImg.width, location.y + asteroidImg.height));
+        //collisionMesh.setVertex(3, new PVector(location.x, location.y + asteroidImg.height));
+        for(int i = 0; i < collisionMeshDetail; i++){
+            float angle = i * rotationIncrement;
+            float x = cos(angle);
+            float y = sin(angle);
+            collisionMesh.setVertex(i, new PVector((x * radCollisionMesh) + this.location.x + asteroidImg.width/2,  
+                                                   (y * radCollisionMesh) + this.location.y + asteroidImg.height/2));
+        }
+
     }
 
 
