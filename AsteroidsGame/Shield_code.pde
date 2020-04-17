@@ -5,6 +5,8 @@ float radius = 30;
 float radDir = 1;
 PVector shipLoc, shipVel;
 float angleInc = 0;
+float[] shieldDest = {0, 0, 0, 0};
+float shieldRad = 5;
 
 
 void setup(){
@@ -23,20 +25,25 @@ void draw(){
   shipLoc.add(shipVel);
   shield();
   drawShield();
+  collisionDetect();
+  rect(300,220,50,50);
 }
 
 void shield(){
   for (int i = 0; i <sx.length; i++){
-    sx[i] = shipLoc.x + cos(radians(angle+angleInc))*(radius);
-    sy[i] = shipLoc.y + sin(radians(angle+angleInc))*(radius);
-    angle += frequency;
-    angleInc += 90;
-    radius -=0.1 * radDir;
-    if (radius < 5){
-      radDir *= -1;
-    }else if (radius >30){
-      radDir *= -1;
-    }
+    if(shieldDest[i] == 0){  
+      sx[i] = shipLoc.x + cos(radians(angle+angleInc))*(radius);
+      sy[i] = shipLoc.y + sin(radians(angle+angleInc))*(radius);
+      angle += frequency;
+      radius -=0.1 * radDir;
+      println(sx);
+      if (radius < 5){
+        radDir *= -1;
+      }else if (radius >30){
+        radDir *= -1;
+      }
+      }
+   angleInc += 90; 
   } 
 }
 
@@ -44,7 +51,20 @@ void drawShield(){
   fill(#008000);
   stroke(10);
   for (int s = 0; s<sx.length; s++){
-    ellipse(sx[s], sy[s], 5, 5);
+    if (shieldDest[s] == 0){
+      ellipse(sx[s], sy[s], shieldRad, shieldRad);
+    }
+  }
+}
+
+void collisionDetect(){
+  for (int i=0; i<shieldDest.length; i++){
+    if (((300 - 25 <= sx[i] + shieldRad && 350 >= sx[i] - shieldRad) && shieldDest[i] == 0) 
+          && ((220 - 25 <= sy[i] + shieldRad) && 220 + 25 >= sy[i] - shieldRad ))
+    {
+      shieldDest[i] = 1;
+      println(shieldDest);
+    }
   }
 }
     
