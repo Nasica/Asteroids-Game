@@ -1,6 +1,6 @@
-float[] sx, sy;
+float[] sx, sy, rx, ry;
 float angle = 0;
-float frequency = 0.5;
+float frequency = 1;
 float radius = 30;
 float radDir = 1;
 PVector shipLoc, shipVel;
@@ -16,6 +16,9 @@ void setup(){
   shipVel = new PVector(0.6, 0.3);
   sx = new float[4];
   sy = new float[4];
+  rx = new float[5];
+  ry = new float[5];
+  asteroids();
 }
   
 void draw(){
@@ -25,8 +28,11 @@ void draw(){
   shipLoc.add(shipVel);
   shield();
   drawShield();
+  drawAsteroids();
+  
   collisionDetect();
-  rect(300,220,50,50);
+  //rect(300,220,50,50);
+  //rect(110,120,50,50);
 }
 
 void shield(){
@@ -59,12 +65,31 @@ void drawShield(){
 
 void collisionDetect(){
   for (int i=0; i<shieldDest.length; i++){
-    if (((300 - 25 <= sx[i] + shieldRad && 350 >= sx[i] - shieldRad) && shieldDest[i] == 0) 
-          && ((220 - 25 <= sy[i] + shieldRad) && 220 + 25 >= sy[i] - shieldRad ))
+    for (int a=0; a<rx.length; a++){
+      if (((rx[a] - 20 <= sx[i] + shieldRad && rx[a] + 20 >= sx[i] - shieldRad) && shieldDest[i] == 0) 
+          && ((ry[a] - 20 <= sy[i] + shieldRad) && ry[a] + 20 >= sy[i] - shieldRad )){
+            shieldDest[i] = 1;
+            println(shieldDest);
+          }
+    }
+    
     {
-      shieldDest[i] = 1;
-      println(shieldDest);
+      
     }
   }
 }
+
+void asteroids(){
+  for (int r = 0; r<rx.length; r++){
+    rx[r] = random(100,300);
+    ry[r] = random(100,300);
+  }
+}
+
+void drawAsteroids(){
+  for (int r = 0; r<rx.length; r++){
+    rect(rx[r],ry[r], 40, 40);
+  }
+}
+
     
