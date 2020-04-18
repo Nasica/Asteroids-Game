@@ -11,6 +11,29 @@
 * ...
 **************************************************************/
 
+Player player;
+boolean sUP, sDOWN, sLEFT, sRIGHT;
+
+void setup(){
+ //frameRate(10);
+ size(800,800);
+ player = new Player();
+ //println(player.getScore());
+ //println(player.getLives());
+ //println(player.getBearing());
+ //println(player.getVelocity());
+ //println(player.getBoundingBox());
+}
+
+void draw(){
+ println(player.getBearing(), player.getVelocity());
+ background(0); 
+ player.drawShip(); 
+ moveShip(); 
+  
+}
+/* TEMPLATE CODE
+
 PShape ship; // don't have to use pshape - can use image
 int astroNums=20;
 PVector[] astroids = new PVector[astroNums];
@@ -45,6 +68,10 @@ void setup(){
 
 ***************************************************************/
 
+
+
+
+
 void moveShip(){
   
   //this function should update if keys are pressed down 
@@ -52,14 +79,21 @@ void moveShip(){
   //update rotation,speed and update current location
   //you should also check to make sure your ship is not outside of the window
   if(sUP){
+    player.accelerate(0.5);
+    
   }
   if(sDOWN){
+    player.accelerate(-0.5);
   }
   if(sRIGHT){
+    player.rotateShip(0.5);
   }
   if(sLEFT){
+    player.rotateShip(-0.5);
   }
 }
+
+/*
 void drawShots(){
    //draw points for each shot from spacecraft 
    //at location and updated to new location
@@ -89,11 +123,12 @@ void draw(){
   drawAstroids();
   // draw score
 }
-
+*/
 void keyPressed() {
   if (key == CODED) {
     if (keyCode == UP) {
       sUP=true;
+      
     }
     if (keyCode == DOWN) {
       sDOWN=true;
@@ -114,6 +149,7 @@ void keyReleased() {
   if (key == CODED) {
     if (keyCode == UP) {
       sUP=false;
+      //player.accelerating = false;
     }
     if (keyCode == DOWN) {
       sDOWN=false;
