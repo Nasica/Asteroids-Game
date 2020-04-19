@@ -9,17 +9,31 @@ Attributes:(-) int      size                    // 1=small, 2=medium, other=larg
            (-) PVector  velocity
            (-) PImage   asteroidImg
            (-) PShape   collisionMesh           // Use its .contain() method for calculating
+           (-) int      collisionMeshDetail     // The number of vertices that make up the circle 
+                                                // around the asteroid
+           (-) float    rotationIncrement       // Used for creating the circular collision mesh
+           (-) float    radCollisionMesh        // The radius of the collision mesh, equal to a
+                                                // quarter of the image width.
 
 Methods:   (C) Asteroid(int)                    // Basic constructor with int size 
                                                 //(created at random offscreen location)
            (C) Asteroid(int PVector PVector)    // Constructor with creation at specified location 
                                                 // with size int
 
+           (+) wrapXAxis(int)                   // Wraps the asteroid object around it's X-axis
+           (+) wrapYAxis(int)                   // Wraps the asteroid object around it's Y-Axis
+           (+) getImageSize(): PVector          // Gets the asteroid images current width (x) and size (y)
            (+) getLocation(): PVector
            (+) getVelocity(): Pvector
+           (+) getCollisionMesh(): PShape       // Returns a PShape use the .contains() method for
+                                                // collision detection
            (+) setLocation(PVector)             // Sets the objects location
            (+) drawAsteroid()                   // Draws the object to the screen
            (+) updatePosition                   // updates the objects location based on its velocity
+           (-) createCollisionMesh              // Creates the vertices for the collision mesh around the
+                                                // asteroid image.
+           (-) updateCollisionMesh              // Updates the collision mesh after an asteroids position 
+                                                // is updated with the updatePosition() method.
            (-) rotateAsteroid()                 // Not yet implemented
            (-) setImage()                       // Sets the objects image based on its size
            (-) createCollisionMesh()            // Creates the collisionMesh object based on 

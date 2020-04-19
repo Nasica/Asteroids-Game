@@ -6,7 +6,7 @@
 *  
 *  Filename: Asteroid.pde
 *  Date:     27 March 2020
-*  Updated:  28 March 2020 
+*  Updated:  19 April 2020 
 *
 */
 
@@ -28,7 +28,7 @@ class Asteroid{
         
         //Test code
         this.location = new PVector(200, 200);
-        this.velocity = new PVector(0,0);
+        this.velocity = new PVector(5,5);
         //
         
         setImage();
@@ -45,7 +45,55 @@ class Asteroid{
         this.velocity = velocity;
     }
     
+    /**
+     * If the asteroid object has left the horizontal limits of the screen, 
+     *this function returns the object to the opposite side of the screen with 
+     * the same velocity vector.
+     * @param screenWidth       The width of the visable screen
+     */
+    public void wrapXAxis(int screenWidth){
+        // These are way too long, but I cant think how to shorten.
+        if(this.getLocation().x > screenWidth){
+            this.setLocation(new PVector(
+                (this.getLocation().x - screenWidth - asteroidImg.width), 
+                    this.getLocation().y));
 
+        } else {
+            this.setLocation(new PVector(
+                (this.getLocation().x + screenWidth + asteroidImg.width), 
+                    this.getLocation().y));
+
+        }
+    }
+
+    /**
+     * If the asteroid object has left the vertical limits of the screen, 
+     *this function returns the object to the opposite side of the screen with 
+     * the same velocity vector.
+     * @param screenHeight       The height  of the visable screen
+     */
+    public void wrapYAxis(int screenHeight){
+        // These are way too long, but I cant think how to shorten.
+        if(this.getLocation().x > screenWidth){
+        if(this.getLocation().y > screenHeight){
+            this.setLocation(new PVector(this.getLocation().x, 
+                (this.getLocation().y - screenHeight - asteroidImg.height)));
+        
+        } else {
+            this.setLocation(new PVector(this.getLocation().x, 
+                (this.getLocation().y + screenHeight + asteroidImg.height)));
+        
+        }
+    }
+    
+    /**
+     * Gets the width(x) and height(y) of the asteroid' current image
+     * @return      PVector of the images width(x) and height(y)
+     */
+    public PVector getImageSize(){
+        return new PVector(asteroidImg.width, asteroidImg.height);
+    }
+    
     /**
      * Gets the objects current location
      * @return      objects location 
@@ -54,6 +102,7 @@ class Asteroid{
         return this.location;
     }
 
+    
 
     /**
      * Gets the objects current velocity
@@ -66,7 +115,8 @@ class Asteroid{
 
     /**
     * Gets the collision mesh for the objects current location
-    * @return       Objects PShape to be used with its .contains() method for collision calculations  
+    * @return       Objects PShape to be used with its .contains() 
+    *               method for collision calculations  
     */
     public PShape getCollisionMesh(){
         return this.collisionMesh;
@@ -79,6 +129,7 @@ class Asteroid{
      */
     public void setLocation(PVector location){
         this.location = location;
+        updateCollisionMesh();
     }
 
 
@@ -99,37 +150,43 @@ class Asteroid{
     }
 
 
+    /**
+     * Creates a PShape circular object based on the radius of asteroidImg. 
+     * This can then be later used, with the PShapes 
+     * .contains(float x, float y)     method for calculating collisions
+     * 
+     * Called by: Constructor
+     */
     private void createCollisionMesh(){
-        // If the collision mesh hasn't been initialised create it and its verticies else
-        // update the verticies to its new location
-        //collisionMesh.vertex(location.x, location.y);
-        //collisionMesh.vertex(location.x + asteroidImg.width, location.y);
-        //collisionMesh.vertex(location.x + asteroidImg.width, location.y + asteroidImg.height);
-        //collisionMesh.vertex(location.x, location.y + asteroidImg.height);
-        
         for(int i = 0; i < collisionMeshDetail; i++){
             float angle = i * rotationIncrement;
             float x = cos(angle);
             float y = sin(angle);
-            collisionMesh.vertex((x * radCollisionMesh) + this.location.x + asteroidImg.width/2, 
-                                 (y * radCollisionMesh) + this.location.y + asteroidImg.height/2);
+            collisionMesh.vertex((x * radCollisionMesh) + this.location.x + 
+                    asteroidImg.width/2, 
+                    (y * radCollisionMesh) + this.location.y + 
+                    asteroidImg.height/2);
+        
         }
     }
 
 
+    /*
+     * Updates the collision mesh after any movement or as required.
+     *
+     * Called by: updatePosition()
+     */
     private void updateCollisionMesh(){
-        //collisionMesh.setVertex(0, new PVector(location.x, location.y));
-        //collisionMesh.setVertex(1, new PVector(location.x + asteroidImg.width, location.y));
-        //collisionMesh.setVertex(2, new PVector(location.x + asteroidImg.width, location.y + asteroidImg.height));
-        //collisionMesh.setVertex(3, new PVector(location.x, location.y + asteroidImg.height));
         for(int i = 0; i < collisionMeshDetail; i++){
             float angle = i * rotationIncrement;
             float x = cos(angle);
             float y = sin(angle);
-            collisionMesh.setVertex(i, new PVector((x * radCollisionMesh) + this.location.x + asteroidImg.width/2,  
-                                                   (y * radCollisionMesh) + this.location.y + asteroidImg.height/2));
-        }
+            collisionMesh.setVertex(i, new PVector((x * radCollisionMesh) + 
+                    this.location.x + asteroidImg.width/2,  
+                    (y * radCollisionMesh) + 
+                    this.location.y + asteroidImg.height/2));
 
+        }
     }
 
 
