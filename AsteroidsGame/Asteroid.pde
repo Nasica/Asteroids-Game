@@ -12,25 +12,35 @@
 
 
 class Asteroid{
-    int MAX_SPEED;
-    int size;
-    int roationalSpeed;
-    PVector location;
-    PVector velocity;
-    PImage asteroidImg;
-    PShape collisionMesh;
-    int collisionMeshDetail = 10;
-    float rotationIncrement = TWO_PI/collisionMeshDetail;
-    float radCollisionMesh;
+    private int MAX_SPEED;
+    private float MIN_ROT_SPEED = 0.1;
+    private float MAX_ROT_SPEED = 3;
+    private int size;
+    private float roationalSpeed;
+    private PVector location;
+    private PVector velocity;
+    private PImage asteroidImg;
+    private PShape collisionMesh;
+    private int collisionMeshDetail = 10;
+    private float rotationIncrement = TWO_PI/collisionMeshDetail;
+    private float radCollisionMesh;
+    private float asteroidRotation = 0;
+    private boolean clockwiseRotation;
 
+    
+    /**
+     * Test constructor, do not use
+     */
     public Asteroid(int size) {
         this.size = size;
         
         //Test code
-        this.location = new PVector(200, 200);
-        this.velocity = new PVector(5,5);
+        this.location = new PVector(200, 400);
+        this.velocity = new PVector(5,0);
         //
         
+        this.clockwiseRotation = randomBool();
+        this.roationalSpeed = random(MIN_ROT_SPEED, MAX_ROT_SPEED);
         setImage();
         radCollisionMesh = asteroidImg.width / 4;
         collisionMesh = new PShape(PShape.PATH);
@@ -43,6 +53,12 @@ class Asteroid{
         this.size = size;
         this.location = location;
         this.velocity = velocity;
+        this.clockwiseRotation = randomBool();
+        this.roationalSpeed = random(MIN_ROT_SPEED, MAX_ROT_SPEED);
+        setImage();
+        radCollisionMesh = asteroidImg.width / 4;
+        collisionMesh = new PShape(PShape.PATH);
+        createCollisionMesh();
     }
     
     /**
@@ -53,15 +69,15 @@ class Asteroid{
      */
     public void wrapXAxis(int screenWidth){
         // These are way too long, but I cant think how to shorten.
-        if(this.getLocation().x > screenWidth){
-            this.setLocation(new PVector(
-                (this.getLocation().x - screenWidth - asteroidImg.width), 
-                    this.getLocation().y));
+        if(this.location.x > screenWidth){
+            this.location = new PVector(
+                (this.location.x - screenWidth - asteroidImg.width), 
+                 this.location.y);
 
         } else {
-            this.setLocation(new PVector(
-                (this.getLocation().x + screenWidth + asteroidImg.width), 
-                    this.getLocation().y));
+            this.location = new PVector(
+                (this.location.x + screenWidth + asteroidImg.width), 
+                 this.location.y);
 
         }
     }
@@ -74,18 +90,29 @@ class Asteroid{
      */
     public void wrapYAxis(int screenHeight){
         // These are way too long, but I cant think how to shorten.
-        if(this.getLocation().x > screenWidth){
-        if(this.getLocation().y > screenHeight){
-            this.setLocation(new PVector(this.getLocation().x, 
-                (this.getLocation().y - screenHeight - asteroidImg.height)));
+        if(this.location.y > screenHeight){
+            this.location = new PVector(this.location.x, 
+                (this.location.y - screenHeight - asteroidImg.height));
         
         } else {
-            this.setLocation(new PVector(this.getLocation().x, 
-                (this.getLocation().y + screenHeight + asteroidImg.height)));
+            this.location = new PVector(this.location.x, 
+                (this.location.y + screenHeight + asteroidImg.height));
         
         }
     }
     
+    /**
+     * Creates a boolean value
+     * @return      Random true or false value.
+     */
+    private boolean randomBool(){
+        int boolInt = (int)random(2);
+        if (boolInt == 1){
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Gets the width(x) and height(y) of the asteroid' current image
      * @return      PVector of the images width(x) and height(y)
@@ -132,12 +159,27 @@ class Asteroid{
         updateCollisionMesh();
     }
 
+    /**
+     * Rotates the astroid around it's center in a direction determined 
+     * by the clockwiseRotation boolean.
+     */
+    private void rotateAstroid(){
+        translate(this.location.x, this.location.y);
+        if (this.clockwiseRotation){
+            rotate(radians(++this.asteroidRotation));
+        } else {
+            rotate(radians(--this.asteroidRotation));
+        }
+    }
 
     /**
      * Draws the current object to the screen
      */
     public void drawAsteroid(){
-        image(this.asteroidImg, this.location.x, this.location.y);
+        pushMatrix();
+        rotateAstroid();
+        image(this.asteroidImg, -this.asteroidImg.width/2, -this.asteroidImg.height/2);
+        popMatrix();
     }   
 
 
