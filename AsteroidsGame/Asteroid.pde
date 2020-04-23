@@ -48,7 +48,6 @@ class Asteroid{
         createCollisionMesh();
     }
     
-
     public Asteroid(int size, PVector location, PVector velocity){
         this.size = size;
         this.location = location;
@@ -59,6 +58,24 @@ class Asteroid{
         radCollisionMesh = asteroidImg.width / 4;
         collisionMesh = new PShape(PShape.PATH);
         createCollisionMesh();
+    }
+
+    /**
+     * Draws the current object to the screen
+     */
+    public void drawAsteroid(){
+        pushMatrix();
+        rotateAstroid();
+        image(this.asteroidImg, -this.asteroidImg.width/2, -this.asteroidImg.height/2);
+        popMatrix();
+    } 
+    
+    /**
+     * Updates the objections location based on its velocity
+     */
+    public void updatePosition(){
+        location.add(velocity);
+        updateCollisionMesh();
     }
     
     /**
@@ -102,97 +119,6 @@ class Asteroid{
     }
     
     /**
-     * Creates a boolean value
-     * @return      Random true or false value.
-     */
-    private boolean randomBool(){
-        int boolInt = (int)random(2);
-        if (boolInt == 1){
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Gets the width(x) and height(y) of the asteroid' current image
-     * @return      PVector of the images width(x) and height(y)
-     */
-    public PVector getImageSize(){
-        return new PVector(asteroidImg.width, asteroidImg.height);
-    }
-    
-    /**
-     * Gets the objects current location
-     * @return      objects location 
-     */
-    public PVector getLocation(){
-        return this.location;
-    }
-
-    
-
-    /**
-     * Gets the objects current velocity
-     * @return      objects velocity vector
-     */
-    public PVector getVelocity(){
-        return this.velocity;
-    }
-
-
-    /**
-    * Gets the collision mesh for the objects current location
-    * @return       Objects PShape to be used with its .contains() 
-    *               method for collision calculations  
-    */
-    public PShape getCollisionMesh(){
-        return this.collisionMesh;
-    }
-
-
-    /**
-     * Set the location of the object
-     * @param location      The location the object is to be updated to 
-     */
-    public void setLocation(PVector location){
-        this.location = location;
-        updateCollisionMesh();
-    }
-
-    /**
-     * Rotates the astroid around it's center in a direction determined 
-     * by the clockwiseRotation boolean.
-     */
-    private void rotateAstroid(){
-        translate(this.location.x, this.location.y);
-        if (this.clockwiseRotation){
-            rotate(radians(++this.asteroidRotation));
-        } else {
-            rotate(radians(--this.asteroidRotation));
-        }
-    }
-
-    /**
-     * Draws the current object to the screen
-     */
-    public void drawAsteroid(){
-        pushMatrix();
-        rotateAstroid();
-        image(this.asteroidImg, -this.asteroidImg.width/2, -this.asteroidImg.height/2);
-        popMatrix();
-    }   
-
-
-    /**
-     * Updates the objections location based on its velocity
-     */
-    public void updatePosition(){
-        location.add(velocity);
-        updateCollisionMesh();
-    }
-
-
-    /**
      * Creates a PShape circular object based on the radius of asteroidImg. 
      * This can then be later used, with the PShapes 
      * .contains(float x, float y)     method for calculating collisions
@@ -210,8 +136,32 @@ class Asteroid{
                     asteroidImg.height/2);
         
         }
+    }    
+    
+    /**
+     * Creates a boolean value
+     * @return      Random true or false value.
+     */
+    private boolean randomBool(){
+        int boolInt = (int)random(2);
+        if (boolInt == 1){
+            return true;
+        }
+        return false;
     }
-
+    
+    /**
+     * Rotates the astroid around it's center in a direction determined 
+     * by the clockwiseRotation boolean.
+     */
+    private void rotateAstroid(){
+        translate(this.location.x, this.location.y);
+        if (this.clockwiseRotation){
+            rotate(radians(++this.asteroidRotation));
+        } else {
+            rotate(radians(--this.asteroidRotation));
+        }
+    }
 
     /*
      * Updates the collision mesh after any movement or as required.
@@ -231,7 +181,6 @@ class Asteroid{
         }
     }
 
-
     /**
      * Sets the objects image based on its size
      */
@@ -246,5 +195,47 @@ class Asteroid{
             this.asteroidImg = loadImage("c10000.png");
             // largest (other)
         }
+    }
+    
+   /**
+     * Set the location of the object
+     * @param location      The location the object is to be updated to 
+     */
+    public void setLocation(PVector location){
+        this.location = location;
+        updateCollisionMesh();
+    } 
+    
+    /**
+    * Gets the collision mesh for the objects current location
+    * @return       Objects PShape to be used with its .contains() 
+    *               method for collision calculations  
+    */
+    public PShape getCollisionMesh(){
+        return this.collisionMesh;
+    }
+    
+   /**
+     * Gets the width(x) and height(y) of the asteroid' current image
+     * @return      PVector of the images width(x) and height(y)
+     */
+    public PVector getImageSize(){
+        return new PVector(asteroidImg.width, asteroidImg.height);
+    }
+    
+    /**
+     * Gets the objects current location
+     * @return      objects location 
+     */
+    public PVector getLocation(){
+        return this.location;
+    }
+
+    /**
+     * Gets the objects current velocity
+     * @return      objects velocity vector
+     */
+    public PVector getVelocity(){
+        return this.velocity;
     }
 }
