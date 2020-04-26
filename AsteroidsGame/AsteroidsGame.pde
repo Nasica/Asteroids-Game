@@ -2,7 +2,7 @@
 * File: AsteroidsGame.pde
 * Group: Luke Dart, Scott Dimmock, Mark Gatus, group number 10
 * Date: 27/03/2020
-* Updated: 19/04/2020 (Luke Dart)
+* Updated: 26/04/2020 (Luke Dart)
 * Course: COSC101 - Software Development Studio 1
 * Desc: Astroids is a ...
 * ...
@@ -11,56 +11,35 @@
 * ...
 **************************************************************/
 
-Player player;
-boolean sUP, sDOWN, sLEFT, sRIGHT; // Move to controller if built in functions can be moved there.
+Controller controller;
+
 
 void setup(){
  size(800,800);
- player = new Player();
+ controller = new Controller();
 }
 
 void draw(){
  background(0); 
- player.drawShip(); 
- moveShip(); 
-  
-}
-
-
-// TO-DO: Move to controller. Check if built in functions can be abstracted to controller.
-void moveShip(){
-  
-  if(sUP){
-    player.accelerate(0.5);
-    
-  }
-
-  if(sRIGHT){
-    player.rotateShip(3.5);
-  }
-
-  if(sLEFT){
-    player.rotateShip(-3.5);
-  }
+ controller.updateShip(); 
+ controller.moveShip();  
 }
 
 void keyPressed() {
   if (key == CODED) {
     if (keyCode == UP) {
-      sUP=true;
+      controller.setSUP(true);
       
     }
-    if (keyCode == DOWN) {
-      sDOWN=true;
-    } 
     if (keyCode == RIGHT) {
-      sRIGHT=true;
+      controller.setSRIGHT(true);
     }
     if (keyCode == LEFT) {
-      sLEFT=true;
+      controller.setSLEFT(true);
     }
   }
   if (key == ' ') {
+    //TO-DO: IMPEMENT FIRING - SPACEBAR?
     //fire a shot
   }
 }
@@ -68,17 +47,14 @@ void keyPressed() {
 void keyReleased() {
   if (key == CODED) {
     if (keyCode == UP) {
-      sUP=false;
-      //player.accelerating = false;
+      controller.setSUP(false);
     }
-    if (keyCode == DOWN) {
-      sDOWN=false;
-    } 
     if (keyCode == RIGHT) {
-      sRIGHT=false;
+      controller.setSRIGHT(false);
     }
     if (keyCode == LEFT) {
-      sLEFT=false;
+      controller.setSLEFT(false);
     }
   }
 }
+  
