@@ -37,7 +37,7 @@ class Controller{
     this.sRIGHT = false;
   }
 
-  
+  // Keyboard Controls
   public void setSUP(boolean state){
     this.sUP = state; 
   }
@@ -49,6 +49,7 @@ class Controller{
   public void setSRIGHT(boolean state){
     this.sRIGHT = state; 
   }
+  
   
   public void moveShip(){
   
@@ -68,7 +69,9 @@ class Controller{
 
 
   /**
-  * Function: drawShip()
+  * TO-DO: check/update method header.
+  *
+  * Function: updateShip()
   *
   * @param Nil 
   *
@@ -97,11 +100,9 @@ class Controller{
   *          matrix
   */
   public void updateShip(){
-    //this.location.add(.velocity);
     player.setLocation(player.getLocation().add(player.getVelocity()));
     player.edgeDetection();
     pushMatrix();
-    //translate(this.location.x, this.location.y);
     translate(player.getLocation().x, player.getLocation().y);
     pushMatrix();
     rotate(radians(player.getBearing()));
