@@ -195,6 +195,7 @@ class Controller{
    public void updateShip(){
     player.setLocation(player.getLocation().add(player.getVelocity()));
     player.edgeDetection();
+    shape(player.getBoundingBox());
     pushMatrix();
     translate(player.getLocation().x, player.getLocation().y);
     pushMatrix();
@@ -229,60 +230,5 @@ class Controller{
     text("Score: " + player.getScore(), width - HUD_MARGIN - textWidth("Score: XXXXX"), HUD_HEIGHT); 
     
   }
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+    
 }
