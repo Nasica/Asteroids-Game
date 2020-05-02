@@ -3,8 +3,8 @@
 *  
 *  @author Luke Dart, Scott Dimmock, Mark Gatus
 *  @version 1.0
-*  @since 19 April 2020 (Luke Dart)
-*  
+*  @since 26 April 2020 (Luke Dart)
+*
 *  Filename: Player.pde
 *  Date:     27 March 2020
 */
@@ -223,6 +223,22 @@ class Player{
   
   // Mutators
   
+  /**
+  * Function: setLocation()
+  *
+  * @param location PVector - new ship location.
+  *
+  * @return void
+  *
+  * Desc: Sets location of ship
+  * 
+  * Calls: Nil
+  *
+  * Affects: location
+  */
+  public void setLocation(PVector location){
+    this.location = location;
+  }
   
   
   
@@ -403,54 +419,6 @@ class Player{
    }
   }
   
-  
-  // METHODS THAT SHOULD BE IN CONTROLLER AND FURTHER ABSTRACTED
-  
-  
-  /**
-  * Function: drawShip()
-  *
-  * @param Nil 
-  *
-  * @return void
-  *
-  * Desc: Updates location based on velocity. 
-  *       Checks edges of screen.
-  *       Pushes matrix transformations, translate to location and rotate by bearing. 
-  *       Draws flame offset on x axis by half image width and offset on y axis by flamePosition.
-  *       Draws ship offset on x and y axis by half image width and height.
-  *       Pop matrix transformations.
-  *       Decelerates ship.
-  *
-  * Calls: add()
-  *        edgeDetection()
-  *        pushMatrix()
-  *        translate()
-  *        rotate()
-  *        radians()
-  *        image()
-  *        popMatrix()
-  *        decelerate()
-  *
-  * Affects: location 
-  *          display
-  *          matrix
-  */
-  public void drawShip(){
-   this.location.add(this.velocity);
-   edgeDetection();
-   pushMatrix();
-   translate(this.location.x, this.location.y);
-   pushMatrix();
-   rotate(radians(bearing));
-   image(this.flame, this.flame.width / 2 * -1, flamePosition );
-   image(this.shipImg, this.shipImg.width / 2 * -1, this.shipImg.height / 2 * -1);
-   popMatrix();
-   popMatrix();
-   decelerate();
-  }
- 
-  
   /**
   * Function: edgeDetection()
   *
@@ -480,4 +448,18 @@ class Player{
      this.location.y = 0;
    }
   }
+  
+  // ADD METHOD HEADER
+  public void drawShip(){
+    image(this.flame, this.flame.width / 2 * -1, flamePosition );
+    image(this.shipImg, this.shipImg.width / 2 * -1, this.shipImg.height / 2 * -1);
+  }
+  
+  
+  
+  
+ 
+ 
+  
+
 }
