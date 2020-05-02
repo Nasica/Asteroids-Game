@@ -17,8 +17,7 @@ class Player{
   private PVector location;
   private float bearing;
   private PVector velocity;
-  private PImage shipImg;
-  private PImage flame;
+  private PImage shipImg, shipIcon, flame;
   private final int SHIP_SCALE = 30;
   private final int FLAME_SCALE = 20;
   private final int MIN_FLAME = 0;
@@ -26,8 +25,8 @@ class Player{
   private final int FLAME_INCREMENT = 2;
   private final int FLAME_DECREMENT = 1;
   private final int MAX_SPEED = 5;
-  private final float DRIFT = 1.;
-  private final float DECELERATION = 0.95;
+  private final float DRIFT = 0.5;
+  private final float DECELERATION = 0.97;
   
   
     
@@ -51,11 +50,12 @@ class Player{
     this.bearing = 360.0;
     this.velocity = new PVector(0,0);
     this.shipImg = loadImage("ship.png");
+    this.shipIcon = loadImage("ship.png");
     this.flame = loadImage("flame.png");
     this.shipImg.resize(SHIP_SCALE, SHIP_SCALE);
+    this.shipIcon.resize(SHIP_SCALE / 2, SHIP_SCALE / 2);
     this.flame.resize(FLAME_SCALE, FLAME_SCALE);
-  }
-  
+  }  
   
   /**
   * Function: Player()
@@ -74,8 +74,10 @@ class Player{
     this.bearing = 360.0;
     this.velocity = new PVector(0,0);
     this.shipImg = loadImage("ship.png");
+    this.shipIcon = loadImage("ship.png");
     this.flame = loadImage("flame.png");
     this.shipImg.resize(SHIP_SCALE, SHIP_SCALE);
+    this.shipIcon.resize(SHIP_SCALE / 2, SHIP_SCALE / 2);
     this.flame.resize(FLAME_SCALE, FLAME_SCALE);
   }
   
@@ -98,8 +100,10 @@ class Player{
     this.bearing = 360.0;
     this.velocity = new PVector(0,0);
     this.shipImg = loadImage("ship.png");
+    this.shipIcon = loadImage("ship.png");
     this.flame = loadImage("flame.png");
     this.shipImg.resize(SHIP_SCALE, SHIP_SCALE);
+    this.shipIcon.resize(SHIP_SCALE / 2, SHIP_SCALE / 2);
     this.flame.resize(FLAME_SCALE, FLAME_SCALE);
   }
   
@@ -211,13 +215,12 @@ class Player{
   *
   * Affects: Nil
   */
-  public PVector[] getBoundingBox(){
-    PVector upperLeft = new PVector(this.location.x - this.shipImg.width / 2, this.location.y - this.shipImg.height / 2);
-    PVector upperRight = new PVector(this.location.x + this.shipImg.width / 2, this.location.y - this.shipImg.height / 2);
-    PVector lowerLeft = new PVector(this.location.x - this.shipImg.width / 2, this.location.y + this.shipImg.height / 2);
-    PVector lowerRight = new PVector(this.location.x + this.shipImg.width / 2, this.location.y + shipImg.height / 2);
-    
-    return new PVector[]{upperLeft, upperRight, lowerLeft, lowerRight};
+  public PShape getBoundingBox(){
+    PShape boundingBox = createShape(RECT,this.location.x - this.shipImg.width / 2, 
+                              this.location.y - this.shipImg.height / 2,
+                              this.shipImg.width, 
+                              this.shipImg.height);
+    return boundingBox;
   }
   
   
@@ -237,9 +240,8 @@ class Player{
   * Affects: location
   */
   public void setLocation(PVector location){
-    this.location = location;
-  }
-  
+    this.location = location;  
+  }  
   
   
   // Void Methods
@@ -261,7 +263,7 @@ class Player{
   */  
    public void rotateShip(float degrees){
     this.bearing += degrees;
-          
+              
     if(this.bearing < 1.0){
      this.bearing = 360.9;
     }
@@ -432,8 +434,6 @@ class Player{
   *
   * Affects: location 
   */  
-
-  
   public void edgeDetection(){
     if(this.location.x < 0){
      this.location.x = width;
@@ -449,15 +449,20 @@ class Player{
    }
   }
   
-  // ADD METHOD HEADER
+  // TO-DO ADD METHOD HEADERS
   public void drawShip(){
     image(this.flame, this.flame.width / 2 * -1, flamePosition );
     image(this.shipImg, this.shipImg.width / 2 * -1, this.shipImg.height / 2 * -1);
+    //shape(this.getCollisionMesh());
   }
   
   
+  public void drawShipIcon(int x, int y){
+    image(this.shipIcon, x, y); 
+  }
   
   
+
  
  
   
