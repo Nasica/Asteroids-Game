@@ -13,16 +13,17 @@
 
 Controller controller;
 
-
 void setup(){
  size(800,800);
+ textSize(15);
  controller = new Controller();
 }
 
 void draw(){
  background(0); 
  controller.updateShip(); 
- controller.moveShip();  
+ controller.moveShip();
+ controller.drawHUD();
 }
 
 void keyPressed() {
