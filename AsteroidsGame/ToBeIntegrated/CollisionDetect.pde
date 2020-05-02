@@ -13,4 +13,14 @@ public class CollisionDetect {
             print("BANG!");
         }
     }
+
+    public void detectCollision(Asteroid aster, PShape ship){
+        for (int i = 0; i < ship.getVertexCount(); i++){
+            PVector v = ship.getVertex(i);
+            if((dist(aster.getLocation().x, aster.getLocation().y,
+                            v.x, v.y) - aster.getImageSize().x/4) < 0){
+                println("PShape Bang");
+            }
+        }
+    }
 }
