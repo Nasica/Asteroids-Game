@@ -12,7 +12,8 @@
 
 
 class Asteroid{
-    private int MAX_SPEED;
+    public final int MIN_SPEED = 3;
+    public final int MAX_SPEED = 5;
     private float MIN_ROT_SPEED = 0.1;
     private float MAX_ROT_SPEED = 3;
     private int size;
@@ -31,7 +32,8 @@ class Asteroid{
     /**
      * Test constructor, do not use
      */
-    public Asteroid(int size) {
+    public Asteroid(int size) {    
+
         this.size = size;
         
         //Test code
@@ -48,10 +50,10 @@ class Asteroid{
         createCollisionMesh();
     }
     
-    public Asteroid(int size, PVector location, PVector velocity){
+    public Asteroid(int size, PVector location){
         this.size = size;
         this.location = location;
-        this.velocity = velocity;
+        this.velocity = new PVector(0,0);
         this.clockwiseRotation = randomBool();
         this.roationalSpeed = random(MIN_ROT_SPEED, MAX_ROT_SPEED);
         setImage();
@@ -205,7 +207,15 @@ class Asteroid{
         this.location = location;
         updateCollisionMesh();
     } 
-    
+   
+    /**
+    * Set the velocity of the object
+    * @param velocity       The velocity the object is to be updated to.
+    */
+    public void setVelocity(PVector velocity){
+        this.velocity = velocity;
+    }
+
     /**
     * Gets the collision mesh for the objects current location
     * @return       Objects PShape to be used with its .contains() 

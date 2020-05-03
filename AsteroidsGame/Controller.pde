@@ -18,8 +18,8 @@ class Controller{
   private final float SHIP_ROTATION = 3.5;
   private final int HUD_MARGIN = 20;
   private final int HUD_HEIGHT = 32;
-  
-  
+  private ArrayList<Asteroid> asteroids;
+
   // Constructors
  
   /**
@@ -33,6 +33,7 @@ class Controller{
   */
   Controller(){
     this.player = new Player();
+    this.asteroids = new ArrayList<Asteroid>();
     this.sUP = false;
     this.sLEFT = false;
     this.sRIGHT = false;
@@ -49,8 +50,9 @@ class Controller{
   * Desc: Constructor with lives parameter, creates a new Player object with specified number of lives
   * and itialises userInput booleans to false.
   */
-  Controller(int lives){
+  Controller(int lives, int screenWidth, int screenHeight){
     player = new Player(lives);
+    asteroids = new ArrayList<Asteroid>();
     this.sUP = false;
     this.sLEFT = false;
     this.sRIGHT = false;
@@ -68,8 +70,9 @@ class Controller{
   * Desc: Constructor with lives and score parameters, creates a new Player object with specified score and number of lives 
   * and itialises userInput booleans to false.
   */
-  Controller(int lives, int score){
+  Controller(int lives, int score, int screenWidth, int screenHeight){
     player = new Player(lives, score);
+    asteroids = new ArrayList<Asteroid>();
     this.sUP = false;
     this.sLEFT = false;
     this.sRIGHT = false;
@@ -230,5 +233,49 @@ class Controller{
     text("Score: " + player.getScore(), width - HUD_MARGIN - textWidth("Score: XXXXX"), HUD_HEIGHT); 
     
   }
-    
+
+  //Scott's New code below
+  
+  private PVector randomPointOnCirc(){
+    PVector randomPoint;
+    float radius = sqrt(sq(width) + sq(height))  
+    float angle = random(359) * TWO_PI;
+    float xPoint = cos(angle) * radius;
+    float yPoint = sin(angle) * radius;
+
+    return(new PVector(xPoint, yPoint);
+  }
+
+  private PVector randomVelocity(int minSpeed, int maxSpeed){
+    int xVel = random(minSpeed, maxSpeed + 1);
+    int yVel = random(minSpeed, maxSpeed + 1);
+    return(new PVector(xVel, yVel);
+  }
+
+  private Asteroid generateAsteroid(){
+    PVector initPosition = new PVector(randomPointOnCirc());
+    Asteroid newAsteroid = new Asteroid(3, initPosition);
+    newAsteroid.setVelocity = randomVelocity(newAsteroid.MIN_SPEED, newAsteroid.MAX_SPEED);
+    return(newAsteroid);
+  }
+
+  public void addNewAsteroids(int numberOfAsteroids){
+    for (int i = 0; i < numberOfAsteroids; i++){
+      asteroids.add(generateAsteroid());
+    }
+  }
+  
+  //Overload to default of 1 initial asteroid
+  public void addNewAsteroids(){
+    asteroids.add(generateAsteroid());
+  }
+
+  public drawAllAsteroids(){
+    for (int i = 0; i < asteroids.size(); i++){
+      currentAsteroid = asteroids.get(i);
+      currentAsteroid.updatePosition();
+      currentAsteroid.drawAsteroid();
+    }
+  }
+
 }

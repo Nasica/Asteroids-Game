@@ -17,6 +17,7 @@ void setup(){
  size(800,800);
  textSize(15);
  controller = new Controller();
+ controller.addNewAsteroids();
 }
 
 void draw(){
@@ -24,6 +25,7 @@ void draw(){
  controller.updateShip(); 
  controller.moveShip();
  controller.drawHUD();
+ controller.drawAllAsteroids();
 }
 
 void keyPressed() {
