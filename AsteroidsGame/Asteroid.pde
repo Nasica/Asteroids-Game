@@ -6,13 +6,14 @@
 *  
 *  Filename: Asteroid.pde
 *  Date:     27 March 2020
-*  Updated:  19 April 2020 
+*  Updated:  03 May 2020 
 *
 */
 
 
 class Asteroid{
-    private int MAX_SPEED;
+    public final int MIN_SPEED = 3;
+    public final int MAX_SPEED = 5;
     private float MIN_ROT_SPEED = 0.1;
     private float MAX_ROT_SPEED = 3;
     private int size;
@@ -31,7 +32,8 @@ class Asteroid{
     /**
      * Test constructor, do not use
      */
-    public Asteroid(int size) {
+    public Asteroid(int size) {    
+
         this.size = size;
         
         //Test code
@@ -48,10 +50,10 @@ class Asteroid{
         createCollisionMesh();
     }
     
-    public Asteroid(int size, PVector location, PVector velocity){
+    public Asteroid(int size, PVector location){
         this.size = size;
         this.location = location;
-        this.velocity = velocity;
+        this.velocity = new PVector(0,0);
         this.clockwiseRotation = randomBool();
         this.roationalSpeed = random(MIN_ROT_SPEED, MAX_ROT_SPEED);
         setImage();
@@ -82,18 +84,17 @@ class Asteroid{
      * If the asteroid object has left the horizontal limits of the screen, 
      *this function returns the object to the opposite side of the screen with 
      * the same velocity vector.
-     * @param screenWidth       The width of the visable screen
      */
-    public void wrapXAxis(int screenWidth){
+    public void wrapXAxis(){
         // These are way too long, but I cant think how to shorten.
-        if(this.location.x > screenWidth){
+        if(this.location.x > width){
             this.location = new PVector(
-                (this.location.x - screenWidth - asteroidImg.width), 
+                (this.location.x - width - asteroidImg.width), 
                  this.location.y);
 
         } else {
             this.location = new PVector(
-                (this.location.x + screenWidth + asteroidImg.width), 
+                (this.location.x + width + asteroidImg.width), 
                  this.location.y);
 
         }
@@ -103,17 +104,16 @@ class Asteroid{
      * If the asteroid object has left the vertical limits of the screen, 
      *this function returns the object to the opposite side of the screen with 
      * the same velocity vector.
-     * @param screenHeight       The height  of the visable screen
      */
-    public void wrapYAxis(int screenHeight){
+    public void wrapYAxis(){
         // These are way too long, but I cant think how to shorten.
-        if(this.location.y > screenHeight){
+        if(this.location.y > height){
             this.location = new PVector(this.location.x, 
-                (this.location.y - screenHeight - asteroidImg.height));
+                (this.location.y - height - asteroidImg.height));
         
         } else {
             this.location = new PVector(this.location.x, 
-                (this.location.y + screenHeight + asteroidImg.height));
+                (this.location.y + height + asteroidImg.height));
         
         }
     }
@@ -187,12 +187,12 @@ class Asteroid{
     private void setImage(){
         if (size == 1){
             // smallest
-            this.asteroidImg = loadImage("a10000.png");
+            this.asteroidImg = loadImage("assets/images/AsteroidBrown.png");
         } else if (size ==2) {
             // medium
-            this.asteroidImg = loadImage("b10000.png");
+            this.asteroidImg = loadImage("assets/images/AsteroidBrown.png");
         } else {
-            this.asteroidImg = loadImage("c10000.png");
+            this.asteroidImg = loadImage("assets/images/AsteroidBrown.png");
             // largest (other)
         }
     }
@@ -205,7 +205,15 @@ class Asteroid{
         this.location = location;
         updateCollisionMesh();
     } 
-    
+   
+    /**
+    * Set the velocity of the object
+    * @param velocity       The velocity the object is to be updated to.
+    */
+    public void setVelocity(PVector velocity){
+        this.velocity = velocity;
+    }
+
     /**
     * Gets the collision mesh for the objects current location
     * @return       Objects PShape to be used with its .contains() 
