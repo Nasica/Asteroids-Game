@@ -3,7 +3,7 @@
 *  
 *  @author Luke Dart, Scott Dimmock, Mark Gatus
 *  @version 1.0
-*  @since 26 April 2020 (Luke Dart)
+*  @since 03 May 2020 (Scott Dimmock)
 *
 *  Filename: Player.pde
 *  Date:     27 March 2020
@@ -216,10 +216,14 @@ class Player{
   * Affects: Nil
   */
   public PShape getBoundingBox(){
-    PShape boundingBox = createShape(RECT,this.location.x - this.shipImg.width / 2, 
-                              this.location.y - this.shipImg.height / 2,
-                              this.shipImg.width, 
-                              this.shipImg.height);
+    PShape boundingBox = createShape();
+    boundingBox.beginShape();
+    boundingBox.vertex(this.location.x - this.shipImg.width / 2, this.location.y - this.shipImg.height / 2);
+    boundingBox.vertex((this.location.x - this.shipImg.width / 2) + this.shipImg.width, this.location.y - this.shipImg.height / 2);
+    boundingBox.vertex((this.location.x - this.shipImg.width / 2) + this.shipImg.width, (this.location.y - this.shipImg.height / 2) + this.shipImg.height);
+    boundingBox.vertex((this.location.x - this.shipImg.width / 2), (this.location.y - this.shipImg.height / 2) + this.shipImg.height);
+    boundingBox.endShape(CLOSE);
+    
     return boundingBox;
   }
   
