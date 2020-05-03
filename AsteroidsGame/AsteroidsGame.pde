@@ -2,7 +2,7 @@
 * File: AsteroidsGame.pde
 * Group: Luke Dart, Scott Dimmock, Mark Gatus, group number 10
 * Date: 27/03/2020
-* Updated: 03/05/2020 (Scott Dimmock)
+* Updated: 26/04/2020 (Luke Dart)
 * Course: COSC101 - Software Development Studio 1
 * Desc: Astroids is a ...
 * ...
@@ -17,7 +17,6 @@ void setup(){
  size(800,800);
  textSize(15);
  controller = new Controller();
- controller.addNewAsteroids(5);
 }
 
 void draw(){
@@ -25,7 +24,6 @@ void draw(){
  controller.updateShip(); 
  controller.moveShip();
  controller.drawHUD();
- controller.drawAllAsteroids();
 }
 
 void keyPressed() {
