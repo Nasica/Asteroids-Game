@@ -3,7 +3,7 @@
 *  
 *  @author Luke Dart, Scott Dimmock, Mark Gatus
 *  @version 0.1
-*  @since 2 May 2020 (Luke Dart
+*  @since 3 May 2020 (Scott Dimmock)
 *  
 *  Filename: Controller.pde
 *  Date:     27 March 2020
@@ -13,6 +13,7 @@
 
 class Controller{
   private Player player;
+  private CollisionDetect collider;
   private boolean sUP, sLEFT, sRIGHT; 
   private final float SHIP_ACCELERATION = 0.1;
   private final float SHIP_ROTATION = 3.5;
@@ -34,6 +35,7 @@ class Controller{
   Controller(){
     this.player = new Player();
     this.asteroids = new ArrayList<Asteroid>();
+    this.collider = new CollisionDetect();
     this.sUP = false;
     this.sLEFT = false;
     this.sRIGHT = false;
@@ -378,6 +380,7 @@ class Controller{
   * Affects: ArrayList<Asteroid> asteroids
   */
   public void drawAllAsteroids(){
+    int j = 0;
     for (int i = 0; i < asteroids.size(); i++){
       Asteroid currentAsteroid = asteroids.get(i);
       currentAsteroid.updatePosition();
@@ -388,7 +391,37 @@ class Controller{
         currentAsteroid.wrapYAxis();
       }
       currentAsteroid.drawAsteroid();
+      if(checkForCollisions()){
+//****Collision has occurred
+      }
     }
+  }
+  
+  /**
+  * Function: checkForCollisions()
+  *
+  * @param Nil
+  *
+  * @return boolean
+  *
+  * Desc: Calls the CollisionDetect.detectCollision() method on each asteroid in the asteroids ArrayList
+  *       against the player object
+  *
+  * Calls: CollisionDetect.detectCollision()
+  *        Player.getBoundingBox
+  *        ArrayList<Asteroid>.get()
+  *        ArrayList<Asteroid>.size()
+  *
+  * Affects: ArrayList<Asteroid> asteroids
+  */  
+  private boolean checkForCollisions(){
+    for (int i = 0; i < asteroids.size(); i++) {
+      Asteroid currentAsteroid = asteroids.get(i);
+      if(collider.detectCollision(currentAsteroid, player.getBoundingBox())){
+        return(true);
+      }
+    }
+    return(false);
   }
 
 }

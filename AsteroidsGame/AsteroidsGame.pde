@@ -2,7 +2,7 @@
 * File: AsteroidsGame.pde
 * Group: Luke Dart, Scott Dimmock, Mark Gatus, group number 10
 * Date: 27/03/2020
-* Updated: 26/04/2020 (Luke Dart)
+* Updated: 03/05/2020 (Scott Dimmock)
 * Course: COSC101 - Software Development Studio 1
 * Desc: Astroids is a ...
 * ...
