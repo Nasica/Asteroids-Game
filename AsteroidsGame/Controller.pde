@@ -50,7 +50,7 @@ class Controller{
   * Desc: Constructor with lives parameter, creates a new Player object with specified number of lives
   * and itialises userInput booleans to false.
   */
-  Controller(int lives, int screenWidth, int screenHeight){
+  Controller(int lives){
     player = new Player(lives);
     asteroids = new ArrayList<Asteroid>();
     this.sUP = false;
@@ -236,44 +236,157 @@ class Controller{
 
   //Scott's New code below
   
+  /**
+  * Function: randomPointOnCirc()
+  *
+  * @param Nil
+  *
+  * @return PVector
+  *
+  * Desc: produces a random point on a circle whose radius is the diagonal screen size
+  *
+  * Calls: random()
+  *        sqrt()
+  *        sq()
+  *        cos()
+  *        sin()
+  *
+  * Affects: Nil
+  */
   private PVector randomPointOnCirc(){
-    PVector randomPoint;
-    float radius = sqrt(sq(width) + sq(height))  
+    float radius = sqrt(sq(width) + sq(height));  
     float angle = random(359) * TWO_PI;
     float xPoint = cos(angle) * radius;
     float yPoint = sin(angle) * radius;
 
-    return(new PVector(xPoint, yPoint);
+    return(new PVector(xPoint, yPoint));
   }
-
+  /**
+  * Function: randomVelocity()
+  *
+  * @param minSpeed int    The minimum speed for the random range
+  * @param maxSpeed int    The maximum speed for the random range
+  *
+  * @return PVector
+  *
+  * Desc: Returns a PVector containing randomised values for use as a velocity.
+  *
+  * Calls: random()
+  *        randomDir()
+  *
+  * Affects: Nil
+  */
   private PVector randomVelocity(int minSpeed, int maxSpeed){
-    int xVel = random(minSpeed, maxSpeed + 1);
-    int yVel = random(minSpeed, maxSpeed + 1);
-    return(new PVector(xVel, yVel);
+    int xVel = (int)random(minSpeed, maxSpeed + 1) * randomDir();
+    int yVel = (int)random(minSpeed, maxSpeed + 1) * randomDir();
+    return(new PVector(xVel, yVel));
+  }
+  
+  /**
+  * Function: randomDir()
+  *
+  * @param Nil
+  *
+  * @return int
+  *
+  * Desc: Returns either a 1 or a -1.
+  *
+  * Calls: random()
+  *
+  * Affects: Nil
+  */
+  private int randomDir(){
+    return(-1 + (int)random(2) * 2); 
   }
 
+  /**
+  * Function: generateAsteroid()
+  *
+  * @param Nil
+  *
+  * @return Asteroid
+  *
+  * Desc: Returns a single Asteroid object with randomly generate position and velocity.
+  *
+  * Calls: randomPointOnCirc()
+  *        randomVelocity()
+  *
+  * Affects: Nil
+  */
   private Asteroid generateAsteroid(){
-    PVector initPosition = new PVector(randomPointOnCirc());
+    PVector initPosition = randomPointOnCirc();
     Asteroid newAsteroid = new Asteroid(3, initPosition);
-    newAsteroid.setVelocity = randomVelocity(newAsteroid.MIN_SPEED, newAsteroid.MAX_SPEED);
+    newAsteroid.setVelocity(randomVelocity(newAsteroid.MIN_SPEED, newAsteroid.MAX_SPEED));
     return(newAsteroid);
   }
 
+  /**
+  * Function: addNewAsteroids()
+  *
+  * @param numberOfAsteroids int    The number of asteroids to add
+  *
+  * @return int
+  *
+  * Desc: Adds a given number of asteroids to the asteroids ArrayList.
+  *
+  * Calls: generateAsteroid()
+  *
+  * Affects: ArrayList<Asteroid> asteroids
+  */
   public void addNewAsteroids(int numberOfAsteroids){
     for (int i = 0; i < numberOfAsteroids; i++){
       asteroids.add(generateAsteroid());
     }
   }
   
-  //Overload to default of 1 initial asteroid
+  /**
+  * Function: addNewAsteroids()
+  *
+  * @param nil
+  *
+  * @return int
+  *
+  * Desc: Adds a single asteroid to the asteroids ArrayList.
+  *
+  * Calls: generateAsteroid()
+  *
+  * Affects: ArrayList<Asteroid> asteroids
+  */
   public void addNewAsteroids(){
     asteroids.add(generateAsteroid());
   }
-
-  public drawAllAsteroids(){
+  
+  
+  /**
+  * Function: drawAllAsteroids()
+  *
+  * @param Nil
+  *
+  * @return void
+  *
+  * Desc: Draws all asteroids in the asteroids ArrayList to the screen.
+  *
+  * Calls: Asteroid.updatePosition()
+  *        Asteroid.getLocation()
+  *        Asteroid.getImageSize()
+  *        Asteroid.wrapXAxis()
+  *        Asteroid.wrapYAxis()
+  *        Asteroid.drawAsteroid()
+  *        ArrayList.size()
+  *        ArrayList.get()
+  *
+  * Affects: ArrayList<Asteroid> asteroids
+  */
+  public void drawAllAsteroids(){
     for (int i = 0; i < asteroids.size(); i++){
-      currentAsteroid = asteroids.get(i);
+      Asteroid currentAsteroid = asteroids.get(i);
       currentAsteroid.updatePosition();
+      if (currentAsteroid.getLocation().x > width || currentAsteroid.getLocation().x < -currentAsteroid.getImageSize().x) {
+        currentAsteroid.wrapXAxis();
+      }
+      if (currentAsteroid.getLocation().y > height || currentAsteroid.getLocation().y < -currentAsteroid.getImageSize().y) {
+        currentAsteroid.wrapYAxis();
+      }
       currentAsteroid.drawAsteroid();
     }
   }

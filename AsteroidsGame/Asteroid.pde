@@ -84,18 +84,17 @@ class Asteroid{
      * If the asteroid object has left the horizontal limits of the screen, 
      *this function returns the object to the opposite side of the screen with 
      * the same velocity vector.
-     * @param screenWidth       The width of the visable screen
      */
-    public void wrapXAxis(int screenWidth){
+    public void wrapXAxis(){
         // These are way too long, but I cant think how to shorten.
-        if(this.location.x > screenWidth){
+        if(this.location.x > width){
             this.location = new PVector(
-                (this.location.x - screenWidth - asteroidImg.width), 
+                (this.location.x - width - asteroidImg.width), 
                  this.location.y);
 
         } else {
             this.location = new PVector(
-                (this.location.x + screenWidth + asteroidImg.width), 
+                (this.location.x + width + asteroidImg.width), 
                  this.location.y);
 
         }
@@ -105,17 +104,16 @@ class Asteroid{
      * If the asteroid object has left the vertical limits of the screen, 
      *this function returns the object to the opposite side of the screen with 
      * the same velocity vector.
-     * @param screenHeight       The height  of the visable screen
      */
-    public void wrapYAxis(int screenHeight){
+    public void wrapYAxis(){
         // These are way too long, but I cant think how to shorten.
-        if(this.location.y > screenHeight){
+        if(this.location.y > height){
             this.location = new PVector(this.location.x, 
-                (this.location.y - screenHeight - asteroidImg.height));
+                (this.location.y - height - asteroidImg.height));
         
         } else {
             this.location = new PVector(this.location.x, 
-                (this.location.y + screenHeight + asteroidImg.height));
+                (this.location.y + height + asteroidImg.height));
         
         }
     }
@@ -189,12 +187,12 @@ class Asteroid{
     private void setImage(){
         if (size == 1){
             // smallest
-            this.asteroidImg = loadImage("a10000.png");
+            this.asteroidImg = loadImage("assets/images/AsteroidBrown.png");
         } else if (size ==2) {
             // medium
-            this.asteroidImg = loadImage("b10000.png");
+            this.asteroidImg = loadImage("assets/images/AsteroidBrown.png");
         } else {
-            this.asteroidImg = loadImage("c10000.png");
+            this.asteroidImg = loadImage("assets/images/AsteroidBrown.png");
             // largest (other)
         }
     }
