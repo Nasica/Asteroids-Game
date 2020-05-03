@@ -11,3 +11,5 @@ AsteroidBrown.png by FunwithPixels (source: https://opengameart.org/content/brow
 LayeredRock.png by FunwithPixels (source: https://opengameart.org/content/a-layered-asteroid-rock) licenced under CC-BY 4.0 https://creativecommons.org/licenses/by/4.0/
 
 flame.png by Prinsu-Kun (source: https://opengameart.org/content/blue-fire-effect) licenced under CC-BY 3.0 http://creativecommons.org/licenses/by/3.0/
+
+explosion.png by Bleed (source: https://opengameart.org/content/simple-explosion-bleeds-game-art) licenced under CC-BY 3.0 http://creativecommons.org/licenses/by/3.0/

@@ -3,7 +3,7 @@
 *  
 *  @author Luke Dart, Scott Dimmock, Mark Gatus
 *  @version 1.0
-*  @since 03 May 2020 (Scott Dimmock)
+*  @since 03 May 2020 (Luke Dart)
 *
 *  Filename: Player.pde
 *  Date:     27 March 2020
@@ -14,10 +14,11 @@ class Player{
   private int score;
   private int lives;
   private int flamePosition;
+  private boolean alive;
   private PVector location;
   private float bearing;
   private PVector velocity;
-  private PImage shipImg, shipIcon, flame;
+  private PImage shipImg, shipIcon, flame, explosion;
   private final int SHIP_SCALE = 30;
   private final int FLAME_SCALE = 20;
   private final int MIN_FLAME = 0;
@@ -45,6 +46,7 @@ class Player{
   Player(){
     this.score = 0;
     this.lives = 3;
+    this.alive = true;
     this.flamePosition = MIN_FLAME;
     this.location = new PVector(width / 2, height / 2);
     this.bearing = 360.0;
@@ -52,6 +54,7 @@ class Player{
     this.shipImg = loadImage("ship.png");
     this.shipIcon = loadImage("ship.png");
     this.flame = loadImage("flame.png");
+    this.explosion = loadImage("explosion.png");
     this.shipImg.resize(SHIP_SCALE, SHIP_SCALE);
     this.shipIcon.resize(SHIP_SCALE / 2, SHIP_SCALE / 2);
     this.flame.resize(FLAME_SCALE, FLAME_SCALE);
@@ -69,6 +72,7 @@ class Player{
   Player(int lives){
     this.score = 0;
     this.lives = lives;
+    this.alive = true;
     this.flamePosition = MIN_FLAME;
     this.location = new PVector(width / 2, height / 2);
     this.bearing = 360.0;
@@ -76,6 +80,7 @@ class Player{
     this.shipImg = loadImage("ship.png");
     this.shipIcon = loadImage("ship.png");
     this.flame = loadImage("flame.png");
+    this.explosion = loadImage("explosion.png");
     this.shipImg.resize(SHIP_SCALE, SHIP_SCALE);
     this.shipIcon.resize(SHIP_SCALE / 2, SHIP_SCALE / 2);
     this.flame.resize(FLAME_SCALE, FLAME_SCALE);
@@ -95,6 +100,7 @@ class Player{
   Player(int lives, int score){
     this.score = score;
     this.lives = lives;
+    this.alive = true;
     this.flamePosition = MIN_FLAME;
     this.location = new PVector(width / 2, height / 2);
     this.bearing = 360.0;
@@ -102,6 +108,7 @@ class Player{
     this.shipImg = loadImage("ship.png");
     this.shipIcon = loadImage("ship.png");
     this.flame = loadImage("flame.png");
+    this.explosion = loadImage("explosion.png");
     this.shipImg.resize(SHIP_SCALE, SHIP_SCALE);
     this.shipIcon.resize(SHIP_SCALE / 2, SHIP_SCALE / 2);
     this.flame.resize(FLAME_SCALE, FLAME_SCALE);
@@ -148,6 +155,24 @@ class Player{
   
   
   /**
+  * Function: getAlive()
+  *
+  * @param Nil
+  *
+  * @return boolean
+  *
+  * Desc: Returns player alive state.
+  *
+  * Calls: Nil
+  *
+  * Affects: Nil 
+  */
+  public boolean getAlive(){
+   return this.alive; 
+  }
+  
+  
+  /**
   * Function: getBearing()
   *
   * @param Nil
@@ -158,8 +183,7 @@ class Player{
   *
   * Calls: Nil
   *
-  * Affects: Nil
-  
+  * Affects: Nil 
   */
   public float getBearing(){
     return this.bearing;
@@ -245,7 +269,24 @@ class Player{
   */
   public void setLocation(PVector location){
     this.location = location;  
-  }  
+  }
+  
+  /**
+  * Function: setAlive()
+  *
+  * @param boolean state
+  *
+  * @return Nil
+  *
+  * Desc: Sets player alive state.
+  *
+  * Calls: Nil
+  *
+  * Affects: Nil 
+  */
+  public void setAlive(boolean state){
+   this.alive = state; 
+  }
   
   
   // Void Methods
@@ -458,6 +499,11 @@ class Player{
     image(this.flame, this.flame.width / 2 * -1, flamePosition );
     image(this.shipImg, this.shipImg.width / 2 * -1, this.shipImg.height / 2 * -1);
     //shape(this.getCollisionMesh());
+    
+    
+    
+      
+     
   }
   
   
@@ -466,9 +512,9 @@ class Player{
   }
   
   
-
- 
+  public void die(int frame, PVector location){
+      image(explosion.get(0 + frame, 0, 192, 193), location.x - 192 / 2, location.y - explosion.height / 2);
+    }
+  }
  
   
-
-}
