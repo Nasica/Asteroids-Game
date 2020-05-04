@@ -21,6 +21,8 @@ class Controller {
   private final int HUD_MARGIN = 20;
   private final int HUD_HEIGHT = 32;
   private ArrayList<Asteroid> asteroids;
+  private Bullets[] bullets;
+  private Shield shield;
 
   // Constructors
 
@@ -41,6 +43,11 @@ class Controller {
     this.sUP = false;
     this.sLEFT = false;
     this.sRIGHT = false;
+    this.bullets = new Bullets[0];
+    for (int i = 0; i < bullets.length; i++){
+      bullets[i] = new Bullets(player.getLocation(), player.getBearing());
+  }
+    shield = new Shield(player.getLocation(), player.getVelocity());
   }
 
 
@@ -61,6 +68,10 @@ class Controller {
     this.sUP = false;
     this.sLEFT = false;
     this.sRIGHT = false;
+    for (int i = 0; i < bullets.length; i++){
+      bullets[i] = new Bullets(player.getLocation(), player.getBearing());
+  }
+    shield = new Shield(player.getLocation(), player.getVelocity());
   }
 
 
@@ -82,6 +93,10 @@ class Controller {
     this.sUP = false;
     this.sLEFT = false;
     this.sRIGHT = false;
+    for (int i = 0; i < bullets.length; i++){
+      bullets[i] = new Bullets(player.getLocation(), player.getBearing());
+  }
+    shield = new Shield(player.getLocation(), player.getVelocity());
   }
 
   // Mutators
@@ -446,4 +461,65 @@ class Controller {
       }
     }
   }
+  
+  /**
+  * Function: createBullet()
+  *
+  * @param Nil
+  *
+  * @return void
+  *
+  * Desc: Generates a bullet instance within a bullet class object array
+  *
+  * Calls: player.getLocation()
+  *        player.getBearing()
+  *
+  * Affects: Bullets objects array
+  */
+  public void createBullet(){
+    Bullets bullet = new Bullets(player.getLocation(), player.getBearing());
+    bullets = (Bullets[]) append(bullets, bullet);
+  }
+  
+  /**
+  * Function: updateBullets()
+  *
+  * @param Nil
+  *
+  * @return void
+  *
+  * Desc: Updates the position of the bullet and draws bullets to canvas
+  *
+  * Calls: bullets[].drawBullets()
+  *        bullets[].updateBullets()
+  *        bullets[].checkEdges()
+  *
+  * Affects: Bullets objects array
+  */
+  public void updateBullets(){
+    for (int i = 0; i<bullets.length; i++){
+    bullets[i].drawBullets();
+    bullets[i].updateBullets();
+    bullets[i].checkEdges();
+    }
+  }
+
+  /**
+  * Function: updateShield()
+  *
+  * @param Nil
+  *
+  * @return void
+  *
+  * Desc: Populates shield class and draws position of shield to canvas
+  *
+  * Calls: shield.shieldPopulate()
+  *        shield.drawShield()
+  *
+  * Affects: Shield object
+  */  
+  public void updateShield(){
+    shield.shieldPopulate();
+    shield.drawShield();
+ }  
 }

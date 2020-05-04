@@ -26,6 +26,8 @@ void draw(){
  controller.updateShip(); 
  controller.moveShip();
  controller.checkForCollisions();
+ controller.updateBullets();
+ controller.updateShield();
  controller.drawHUD();
 }
 
@@ -43,8 +45,7 @@ void keyPressed() {
     }
   }
   if (key == ' ') {
-    //TO-DO: IMPEMENT FIRING - SPACEBAR?
-    //fire a shot
+    controller.createBullet();
   }
 }
 
