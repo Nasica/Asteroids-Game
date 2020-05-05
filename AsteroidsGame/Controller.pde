@@ -426,6 +426,24 @@ class Controller{
     return(false);
   }
 
+  /**
+  * Function: asteroidShot()
+  *
+  * @param asteroidIndex Int    The index of the asteroid within ArrayList asteroids that was shot
+  *
+  * @return void
+  *
+  * Desc: Destroys the asteroid that has been shot and if it is not at the smallest size replaces it
+  *       with NEW_ASTEROIDS_ON_DEST asteroids
+  *
+  * Calls: Asteroid.getSize()
+  *        Asteroid.getLocation()
+  *        ArrayList<Asteroid>.get()
+  *        ArrayList<Asteroid>.remove()
+  *
+  * Affects: ArrayList<Asteroid> asteroids
+  *          int NEW_ASTEROIDS_ON_DEST
+  */  
   public void asteroidShot(int asteroidIndex){
     Asteroid asteroid = asteroids.get(asteroidIndex);
     if (asteroid.getSize() > 1){
