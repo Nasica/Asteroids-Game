@@ -22,10 +22,13 @@ void setup(){
 
 void draw(){
  background(0); 
+ controller.drawAllAsteroids();
  controller.updateShip(); 
  controller.moveShip();
+ controller.checkForCollisions();
+ controller.updateBullets();
+ controller.updateShield();
  controller.drawHUD();
- controller.drawAllAsteroids();
 }
 
 void keyPressed() {
@@ -42,8 +45,7 @@ void keyPressed() {
     }
   }
   if (key == ' ') {
-    //TO-DO: IMPEMENT FIRING - SPACEBAR?
-    //fire a shot
+    controller.createBullet();
   }
 }
 
