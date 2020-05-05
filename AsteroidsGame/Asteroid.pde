@@ -52,7 +52,7 @@ class Asteroid{
     
     public Asteroid(int size, PVector location){
         this.size = size;
-        this.location = location;
+        this.location = new PVector(location.x, location.y);
         this.velocity = new PVector(0,0);
         this.clockwiseRotation = randomBool();
         this.roationalSpeed = random(MIN_ROT_SPEED, MAX_ROT_SPEED);
@@ -76,7 +76,7 @@ class Asteroid{
      * Updates the objections location based on its velocity
      */
     public void updatePosition(){
-        location.add(velocity);
+        this.location.add(velocity);
         updateCollisionMesh();
     }
     
@@ -240,10 +240,32 @@ class Asteroid{
     }
 
     /**
+    * Function: getSize()
+    *
+    * @param Nil
+    *
+    * @return int
+    *
+    * Desc: Returns the size of the asteroid with 1 being the smallest
+    *       and 3 being the largest.
+    *
+    * Calls: Nil
+    *
+    * Affects: Nil
+    */
+    public int getSize(){
+      return this.size;
+    }
+
+    /**
      * Gets the objects current velocity
      * @return      objects velocity vector
      */
     public PVector getVelocity(){
         return this.velocity;
+    }
+    
+    public String toString(){
+       return("******\nPosition " + this.location.x + "," + this.location.y + "\nVelocity " + this.velocity.x + "," + this.velocity.y + "\n"); 
     }
 }

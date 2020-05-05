@@ -17,7 +17,7 @@ void setup(){
  size(800,800);
  textSize(15);
  controller = new Controller();
- controller.addNewAsteroids(5);
+ controller.addNewAsteroids(1);
 }
 
 void draw(){

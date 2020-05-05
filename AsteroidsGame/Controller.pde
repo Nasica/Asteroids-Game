@@ -20,6 +20,7 @@ class Controller{
   private final int HUD_MARGIN = 20;
   private final int HUD_HEIGHT = 32;
   private ArrayList<Asteroid> asteroids;
+  private final int NEW_ASTEROIDS_ON_DEST = 3;
 
   // Constructors
  
@@ -34,7 +35,7 @@ class Controller{
   */
   Controller(){
     this.player = new Player();
-    this.asteroids = new ArrayList<Asteroid>();
+    asteroids = new ArrayList<Asteroid>();
     this.collider = new CollisionDetect();
     this.sUP = false;
     this.sLEFT = false;
@@ -72,7 +73,7 @@ class Controller{
   * Desc: Constructor with lives and score parameters, creates a new Player object with specified score and number of lives 
   * and itialises userInput booleans to false.
   */
-  Controller(int lives, int score, int screenWidth, int screenHeight){
+  Controller(int lives, int score){
     player = new Player(lives, score);
     asteroids = new ArrayList<Asteroid>();
     this.sUP = false;
@@ -321,7 +322,24 @@ class Controller{
     newAsteroid.setVelocity(randomVelocity(newAsteroid.MIN_SPEED, newAsteroid.MAX_SPEED));
     return(newAsteroid);
   }
-
+  
+  /**
+  * Function: addNewAsteroids()
+  *
+  * @param nil
+  *
+  * @return int
+  *
+  * Desc: Adds a single asteroid to the asteroids ArrayList.
+  *
+  * Calls: generateAsteroid()
+  *
+  * Affects: ArrayList<Asteroid> asteroids
+  */
+  public void addNewAsteroids(){
+    asteroids.add(generateAsteroid());
+  }
+  
   /**
   * Function: addNewAsteroids()
   *
@@ -341,24 +359,8 @@ class Controller{
     }
   }
   
-  /**
-  * Function: addNewAsteroids()
-  *
-  * @param nil
-  *
-  * @return int
-  *
-  * Desc: Adds a single asteroid to the asteroids ArrayList.
-  *
-  * Calls: generateAsteroid()
-  *
-  * Affects: ArrayList<Asteroid> asteroids
-  */
-  public void addNewAsteroids(){
-    asteroids.add(generateAsteroid());
-  }
-  
-  
+
+
   /**
   * Function: drawAllAsteroids()
   *
@@ -424,4 +426,56 @@ class Controller{
     return(false);
   }
 
+  public void asteroidShot(int asteroidIndex){
+    Asteroid asteroid = asteroids.get(asteroidIndex);
+    if (asteroid.getSize() > 1){
+      PVector destroyLocation = asteroid.getLocation();
+      addNewAsteroids(NEW_ASTEROIDS_ON_DEST, destroyLocation, asteroid.getSize() - 1);
+    }
+    asteroids.remove(asteroidIndex);
+    
+  }
+  
+  /**
+  * Function: addNewAsteroids()
+  *
+  * @param numberOfAsteroids int    The number of asteroids to add
+  *
+  * @return int
+  *
+  * Desc: Adds a given number of asteroids to the asteroids ArrayList.
+  *
+  * Calls: generateAsteroid()
+  *
+  * Affects: ArrayList<Asteroid> asteroids
+  */
+  public void addNewAsteroids(int numberOfAsteroids, PVector location, int size){
+    for (int i = 0; i < numberOfAsteroids; i++){
+      asteroids.add(generateAsteroid(size, location));
+    }
+  }
+  
+  /**
+  * Function: generateAsteroid()
+  *
+  * @param size int     The size of the asteroid to create.
+  * @param location PVector   The location to generate the asteroid in.
+  *
+  * @return Asteroid
+  *
+  * Desc: Returns a single Asteroid object with a specified position and 
+  *       a random velocity.
+  *
+  * Calls: randomVelocity()
+  *        
+  *
+  * Affects: Nil
+  */
+  private Asteroid generateAsteroid(int size, PVector location){
+    Asteroid newAsteroid = new Asteroid(size, location);
+    newAsteroid.setVelocity(randomVelocity(newAsteroid.MIN_SPEED, newAsteroid.MAX_SPEED));
+    print(newAsteroid);
+    return(newAsteroid);
+  }
+  
 }
