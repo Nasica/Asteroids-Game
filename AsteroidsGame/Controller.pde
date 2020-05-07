@@ -1,14 +1,14 @@
 /**
- *  Controller class.
- *  
- *  @author Luke Dart, Scott Dimmock, Mark Gatus
- *  @version 0.1
- *  @since 3 May 2020 (Luke Dart)
- *  
- *  Filename: Controller.pde
- *  Date:     27 March 2020
- *
- */
+*  Controller class.
+*  
+*  @author Luke Dart, Scott Dimmock, Mark Gatus
+*  @version 0.1
+*  @since 3 May 2020 (Scott Dimmock)
+*  
+*  Filename: Controller.pde
+*  Date:     27 March 2020
+*
+*/
 
 
 class Controller {
@@ -23,6 +23,7 @@ class Controller {
   private ArrayList<Asteroid> asteroids;
   private Bullets[] bullets;
   private Shield shield;
+   private final int NEW_ASTEROIDS_ON_DEST = 3;
 
   // Constructors
 
@@ -37,7 +38,7 @@ class Controller {
    */
   Controller() {
     this.player = new Player();
-    this.asteroids = new ArrayList<Asteroid>();
+    asteroids = new ArrayList<Asteroid>();
     this.collider = new CollisionDetect();
     this.explosionFrame = 0;
     this.sUP = false;
@@ -86,7 +87,7 @@ class Controller {
    * Desc: Constructor with lives and score parameters, creates a new Player object with specified score and number of lives 
    * and itialises userInput booleans to false.
    */
-  Controller(int lives, int score, int screenWidth, int screenHeight) {
+  Controller(int lives, int score){
     player = new Player(lives, score);
     asteroids = new ArrayList<Asteroid>();
     this.explosionFrame = 0;
@@ -362,7 +363,24 @@ class Controller {
     newAsteroid.setVelocity(randomVelocity(newAsteroid.MIN_SPEED, newAsteroid.MAX_SPEED));
     return(newAsteroid);
   }
-
+  
+  /**
+  * Function: addNewAsteroids()
+  *
+  * @param nil
+  *
+  * @return int
+  *
+  * Desc: Adds a single asteroid to the asteroids ArrayList.
+  *
+  * Calls: generateAsteroid()
+  *
+  * Affects: ArrayList<Asteroid> asteroids
+  */
+  public void addNewAsteroids(){
+    asteroids.add(generateAsteroid());
+  }
+  
   /**
    * Function: addNewAsteroids()
    *
@@ -382,24 +400,10 @@ class Controller {
     }
   }
 
-  /**
-   * Function: addNewAsteroids()
-   *
-   * @param nil
-   *
-   * @return int
-   *
-   * Desc: Adds a single asteroid to the asteroids ArrayList.
-   *
-   * Calls: generateAsteroid()
-   *
-   * Affects: ArrayList<Asteroid> asteroids
-   */
-  public void addNewAsteroids() {
-    asteroids.add(generateAsteroid());
-  }
 
 
+  
+  
   /**
    * Function: drawAllAsteroids()
    *
@@ -421,7 +425,6 @@ class Controller {
    * Affects: ArrayList<Asteroid> asteroids
    */
   public void drawAllAsteroids() {
-    int j = 0;
     for (int i = 0; i < asteroids.size(); i++) {
       Asteroid currentAsteroid = asteroids.get(i);
       currentAsteroid.updatePosition();
@@ -505,6 +508,76 @@ class Controller {
   }
 
   /**
+  * Function: asteroidShot()
+  *
+  * @param asteroidIndex Int    The index of the asteroid within ArrayList asteroids that was shot
+  *
+  * @return void
+  *
+  * Desc: Destroys the asteroid that has been shot and if it is not at the smallest size replaces it
+  *       with NEW_ASTEROIDS_ON_DEST asteroids
+  *
+  * Calls: Asteroid.getSize()
+  *        Asteroid.getLocation()
+  *        ArrayList<Asteroid>.get()
+  *        ArrayList<Asteroid>.remove()
+  *
+  * Affects: ArrayList<Asteroid> asteroids
+  *          int NEW_ASTEROIDS_ON_DEST
+  */  
+  public void asteroidShot(int asteroidIndex){
+    Asteroid asteroid = asteroids.get(asteroidIndex);
+    if (asteroid.getSize() > 1){
+      PVector destroyLocation = asteroid.getLocation();
+      addNewAsteroids(NEW_ASTEROIDS_ON_DEST, destroyLocation, asteroid.getSize() - 1);
+    }
+    asteroids.remove(asteroidIndex);
+    
+  }
+  
+  /**
+  * Function: addNewAsteroids()
+  *
+  * @param numberOfAsteroids int    The number of asteroids to add
+  *
+  * @return int
+  *
+  * Desc: Adds a given number of asteroids to the asteroids ArrayList.
+  *
+  * Calls: generateAsteroid()
+  *
+  * Affects: ArrayList<Asteroid> asteroids
+  */
+  public void addNewAsteroids(int numberOfAsteroids, PVector location, int size){
+    for (int i = 0; i < numberOfAsteroids; i++){
+      asteroids.add(generateAsteroid(size, location));
+    }
+  }
+  
+  /**
+  * Function: generateAsteroid()
+  *
+  * @param size int     The size of the asteroid to create.
+  * @param location PVector   The location to generate the asteroid in.
+  *
+  * @return Asteroid
+  *
+  * Desc: Returns a single Asteroid object with a specified position and 
+  *       a random velocity.
+  *
+  * Calls: randomVelocity()
+  *        
+  *
+  * Affects: Nil
+  */
+  private Asteroid generateAsteroid(int size, PVector location){
+    Asteroid newAsteroid = new Asteroid(size, location);
+    newAsteroid.setVelocity(randomVelocity(newAsteroid.MIN_SPEED, newAsteroid.MAX_SPEED));
+    print(newAsteroid);
+    return(newAsteroid);
+  }
+  
+  /**
   * Function: updateShield()
   *
   * @param Nil
@@ -522,4 +595,5 @@ class Controller {
     shield.shieldPopulate();
     shield.drawShield();
  }  
+  
 }
