@@ -458,6 +458,12 @@ class Controller {
   private void checkForCollisions() {
     for (int i = 0; i < asteroids.size(); i++) {
       Asteroid currentAsteroid = asteroids.get(i);
+      for (int j=0; j < bullets.length; j++){
+        Bullets currentBullet = bullets[j];
+        if (collider.detectCollision(currentAsteroid, currentBullet.getLocation())){
+          asteroidShot(i);
+        }
+      }
       if (collider.detectCollision(currentAsteroid, player.getBoundingBox())) {
         asteroids.remove(i);
         player.setAlive(false);
