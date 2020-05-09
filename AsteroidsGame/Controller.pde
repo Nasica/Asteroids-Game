@@ -15,7 +15,8 @@ class Controller {
   private Player player;
   private CollisionDetect collider;
   private int explosionFrame;
-  private boolean sUP, sLEFT, sRIGHT; 
+  private int menuIndex = 0;
+  private boolean sUP, sDOWN, sLEFT, sRIGHT; 
   private final float SHIP_ACCELERATION = 0.1;
   private final float SHIP_ROTATION = 3.5;
   private final int HUD_MARGIN = 20;
@@ -23,7 +24,9 @@ class Controller {
   private ArrayList<Asteroid> asteroids;
   private Bullets[] bullets;
   private Shield shield;
-   private final int NEW_ASTEROIDS_ON_DEST = 3;
+  private MainMenu mainMenu = new MainMenu();
+  private boolean gameStarted = false;
+  private final int NEW_ASTEROIDS_ON_DEST = 3;
 
   // Constructors
 
@@ -44,10 +47,11 @@ class Controller {
     this.sUP = false;
     this.sLEFT = false;
     this.sRIGHT = false;
+    this.sDOWN = false;
     this.bullets = new Bullets[0];
-    for (int i = 0; i < bullets.length; i++){
-      bullets[i] = new Bullets(player.getLocation(), player.getBearing());
-  }
+    //for (int i = 0; i < bullets.length; i++){
+    //  bullets[i] = new Bullets(player.getLocation(), player.getBearing());
+    //}
     shield = new Shield(player.getLocation(), player.getVelocity());
   }
 
@@ -69,11 +73,12 @@ class Controller {
     this.sUP = false;
     this.sLEFT = false;
     this.sRIGHT = false;
-    for (int i = 0; i < bullets.length; i++){
-      bullets[i] = new Bullets(player.getLocation(), player.getBearing());
-  }
+    this.sDOWN = false;
+    //for (int i = 0; i < bullets.length; i++){
+    //  bullets[i] = new Bullets(player.getLocation(), player.getBearing());
+    //}
     shield = new Shield(player.getLocation(), player.getVelocity());
-  }
+  }  
 
 
   /**
@@ -94,9 +99,10 @@ class Controller {
     this.sUP = false;
     this.sLEFT = false;
     this.sRIGHT = false;
-    for (int i = 0; i < bullets.length; i++){
-      bullets[i] = new Bullets(player.getLocation(), player.getBearing());
-  }
+    this.sDOWN = false;
+    //for (int i = 0; i < bullets.length; i++){
+    //  bullets[i] = new Bullets(player.getLocation(), player.getBearing());
+    //}
     shield = new Shield(player.getLocation(), player.getVelocity());
   }
 
@@ -119,6 +125,23 @@ class Controller {
     this.sUP = state;
   }
 
+
+  /**
+   * Function: setSDOWN()
+   * 
+   * @param state boolean - state to set variable to.
+   *
+   * @return void
+   *
+   * desc: Sets sUP variable to desired state.
+   *
+   * calls: Nil
+   *
+   * Affects: sUP
+   */
+  public void setSDOWN(boolean state) {
+    this.sDOWN = state;
+  }
 
   /**
    * Function: setSLEFT()
@@ -173,19 +196,90 @@ class Controller {
    */
   public void moveShip() {
 
-    if (sUP) {
+    if (sUP && gameStarted) {
       this.player.accelerate(SHIP_ACCELERATION);
     }
 
-    if (sRIGHT) {
+    if (sRIGHT && gameStarted) {
       this.player.rotateShip(SHIP_ROTATION);
     }
 
-    if (sLEFT) {
+    if (sLEFT && gameStarted) {
       this.player.rotateShip(-SHIP_ROTATION);
     }
   }
 
+  public void moveMenu(){
+    if (!gameStarted){
+      if (sDOWN){
+      //menu options go down
+        menuIndexDown();
+        this.drawMainMenu();
+      }
+
+      if (sUP){
+      //menu options go up
+        menuIndexUp();
+        this.drawMainMenu();
+      }
+    }
+  }
+
+  private void menuIndexDown(){
+    if (menuIndex == mainMenu.getMenuLength() - 1){
+      menuIndex = 0;    
+    } else {
+      menuIndex++;
+    }
+    
+  }
+
+  private void menuIndexUp(){
+    if (menuIndex == 0){
+      menuIndex = mainMenu.getMenuLength() - 1;
+    } else {
+      menuIndex--;
+    }
+  }
+  
+  public void menuAction(){
+    switch(menuIndex){
+      
+      //Start Game
+      case 0:
+        gameStarted = true;
+        break;
+      //High Scores
+      case 1:
+        break;
+      //Quit
+      case 2:
+        exit();
+        break;
+      default:
+    }
+  }
+  
+  public void drawMainMenu(){
+    if(!gameStarted){
+      int textSize = 20;
+      float textOffset = 40;
+      boolean boldText = false;
+      float textYPos = (height/2) - (((mainMenu.getMenuLength() * textSize) + (mainMenu.getMenuLength() - 1) * textOffset)/2);
+      for (int i = 0; i < mainMenu.getMenuLength(); i++){
+        if (menuIndex == i){
+          boldText = true;
+        }
+        mainMenu.drawMenuItem(mainMenu.getMenuItems(i), width/2, textYPos + textOffset, boldText);
+        textYPos += textOffset;
+        boldText = false;        
+      }
+    }
+  }
+  
+  public boolean getGameState(){
+    return(this.gameStarted); 
+  }
 
   /**
    * Function: updateShip()
@@ -425,16 +519,18 @@ class Controller {
    * Affects: ArrayList<Asteroid> asteroids
    */
   public void drawAllAsteroids() {
-    for (int i = 0; i < asteroids.size(); i++) {
-      Asteroid currentAsteroid = asteroids.get(i);
-      currentAsteroid.updatePosition();
-      if (currentAsteroid.getLocation().x > width || currentAsteroid.getLocation().x < -currentAsteroid.getImageSize().x) {
-        currentAsteroid.wrapXAxis();
+    if (gameStarted){
+      for (int i = 0; i < asteroids.size(); i++) {
+        Asteroid currentAsteroid = asteroids.get(i);
+        currentAsteroid.updatePosition();
+        if (currentAsteroid.getLocation().x > width || currentAsteroid.getLocation().x < -currentAsteroid.getImageSize().x) {
+          currentAsteroid.wrapXAxis();
+        }
+        if (currentAsteroid.getLocation().y > height || currentAsteroid.getLocation().y < -currentAsteroid.getImageSize().y) {
+          currentAsteroid.wrapYAxis();
+        }
+        currentAsteroid.drawAsteroid();
       }
-      if (currentAsteroid.getLocation().y > height || currentAsteroid.getLocation().y < -currentAsteroid.getImageSize().y) {
-        currentAsteroid.wrapYAxis();
-      }
-      currentAsteroid.drawAsteroid();
     }
   }
 
@@ -458,6 +554,12 @@ class Controller {
   private void checkForCollisions() {
     for (int i = 0; i < asteroids.size(); i++) {
       Asteroid currentAsteroid = asteroids.get(i);
+      for (int j=0; j < bullets.length; j++){
+        Bullets currentBullet = bullets[j];
+        if (collider.detectCollision(currentAsteroid, currentBullet.getLocation())){
+          asteroidShot(i);
+        }
+      }
       if (collider.detectCollision(currentAsteroid, player.getBoundingBox())) {
         asteroids.remove(i);
         player.setAlive(false);
@@ -480,8 +582,10 @@ class Controller {
   * Affects: Bullets objects array
   */
   public void createBullet(){
-    Bullets bullet = new Bullets(player.getLocation(), player.getBearing());
-    bullets = (Bullets[]) append(bullets, bullet);
+    if (gameStarted){
+      Bullets bullet = new Bullets(player.getLocation(), player.getBearing());
+      bullets = (Bullets[]) append(bullets, bullet);
+    }
   }
   
   /**
@@ -573,7 +677,6 @@ class Controller {
   private Asteroid generateAsteroid(int size, PVector location){
     Asteroid newAsteroid = new Asteroid(size, location);
     newAsteroid.setVelocity(randomVelocity(newAsteroid.MIN_SPEED, newAsteroid.MAX_SPEED));
-    print(newAsteroid);
     return(newAsteroid);
   }
   

@@ -29,13 +29,15 @@ void draw(){
  controller.updateBullets();
  controller.updateShield();
  controller.drawHUD();
+ 
+ controller.drawMainMenu();
 }
 
 void keyPressed() {
   if (key == CODED) {
     if (keyCode == UP) {
-      controller.setSUP(true);
-      
+      controller.setSUP(true); 
+      controller.moveMenu();
     }
     if (keyCode == RIGHT) {
       controller.setSRIGHT(true);
@@ -43,9 +45,16 @@ void keyPressed() {
     if (keyCode == LEFT) {
       controller.setSLEFT(true);
     }
+    if (keyCode == DOWN) {
+      controller.setSDOWN(true);
+      controller.moveMenu();
+    }
   }
   if (key == ' ') {
     controller.createBullet();
+  }
+  if (key == ENTER) {
+     controller.menuAction(); 
   }
 }
 
@@ -59,6 +68,9 @@ void keyReleased() {
     }
     if (keyCode == LEFT) {
       controller.setSLEFT(false);
+    }
+    if (keyCode == DOWN) {
+      controller.setSDOWN(false);
     }
   }
 }

@@ -21,10 +21,6 @@ class Asteroid{
     private PVector location;
     private PVector velocity;
     private PImage asteroidImg;
-    private PShape collisionMesh;
-    private int collisionMeshDetail = 10;
-    private float rotationIncrement = TWO_PI/collisionMeshDetail;
-    private float radCollisionMesh;
     private float asteroidRotation = 0;
     private boolean clockwiseRotation;
 
@@ -44,10 +40,6 @@ class Asteroid{
         this.clockwiseRotation = randomBool();
         this.roationalSpeed = random(MIN_ROT_SPEED, MAX_ROT_SPEED);
         setImage();
-        radCollisionMesh = asteroidImg.width / 4;
-        collisionMesh = new PShape(PShape.PATH);
-        collisionMesh.setVisible(true);
-        createCollisionMesh();
     }
     
     public Asteroid(int size, PVector location){
@@ -57,9 +49,6 @@ class Asteroid{
         this.clockwiseRotation = randomBool();
         this.roationalSpeed = random(MIN_ROT_SPEED, MAX_ROT_SPEED);
         setImage();
-        radCollisionMesh = asteroidImg.width / 4;
-        collisionMesh = new PShape(PShape.PATH);
-        createCollisionMesh();
     }
 
     /**
@@ -77,7 +66,6 @@ class Asteroid{
      */
     public void updatePosition(){
         this.location.add(velocity);
-        updateCollisionMesh();
     }
     
     /**
@@ -119,26 +107,6 @@ class Asteroid{
     }
     
     /**
-     * Creates a PShape circular object based on the radius of asteroidImg. 
-     * This can then be later used, with the PShapes 
-     * .contains(float x, float y)     method for calculating collisions
-     * 
-     * Called by: Constructor
-     */
-    private void createCollisionMesh(){
-        for(int i = 0; i < collisionMeshDetail; i++){
-            float angle = i * rotationIncrement;
-            float x = cos(angle);
-            float y = sin(angle);
-            collisionMesh.vertex((x * radCollisionMesh) + this.location.x + 
-                    asteroidImg.width/2, 
-                    (y * radCollisionMesh) + this.location.y + 
-                    asteroidImg.height/2);
-        
-        }
-    }    
-    
-    /**
      * Creates a boolean value
      * @return      Random true or false value.
      */
@@ -160,24 +128,6 @@ class Asteroid{
             rotate(radians(++this.asteroidRotation));
         } else {
             rotate(radians(--this.asteroidRotation));
-        }
-    }
-
-    /*
-     * Updates the collision mesh after any movement or as required.
-     *
-     * Called by: updatePosition()
-     */
-    private void updateCollisionMesh(){
-        for(int i = 0; i < collisionMeshDetail; i++){
-            float angle = i * rotationIncrement;
-            float x = cos(angle);
-            float y = sin(angle);
-            collisionMesh.setVertex(i, new PVector((x * radCollisionMesh) + 
-                    this.location.x + asteroidImg.width/2,  
-                    (y * radCollisionMesh) + 
-                    this.location.y + asteroidImg.height/2));
-
         }
     }
 
@@ -203,7 +153,6 @@ class Asteroid{
      */
     public void setLocation(PVector location){
         this.location = location;
-        updateCollisionMesh();
     } 
    
     /**
@@ -212,15 +161,6 @@ class Asteroid{
     */
     public void setVelocity(PVector velocity){
         this.velocity = velocity;
-    }
-
-    /**
-    * Gets the collision mesh for the objects current location
-    * @return       Objects PShape to be used with its .contains() 
-    *               method for collision calculations  
-    */
-    public PShape getCollisionMesh(){
-        return this.collisionMesh;
     }
     
    /**

@@ -38,4 +38,13 @@ public class CollisionDetect {
         }
         return(false);
     }
+
+    public boolean detectCollision(Asteroid asteroid, PVector point){
+      if ((dist(asteroid.getLocation().x, asteroid.getLocation().y, 
+              point.x, point.y) - asteroid.getImageSize().x/4) < 0){
+
+        return(true);
+      }
+      return(false);
+    }
 }
