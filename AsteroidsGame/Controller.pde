@@ -559,7 +559,8 @@ class Controller {
       for (int j=0; j < bullets.length; j++){
         Bullets currentBullet = bullets[j];
         if (collider.detectCollision(currentAsteroid, currentBullet.getLocation())){
-          asteroidShot(i);          
+          asteroidShot(i);
+          bullets[j].setActive(false);
         }
       }
       if (collider.detectCollision(currentAsteroid, player.getBoundingBox())) {
@@ -607,9 +608,11 @@ class Controller {
   */
   public void updateBullets(){
     for (int i = 0; i<bullets.length; i++){
-    bullets[i].drawBullets();
-    bullets[i].updateBullets();
-    bullets[i].checkEdges();
+      if(bullets[i].getActive()){
+        bullets[i].drawBullets();
+        bullets[i].updateBullets();
+        bullets[i].checkEdges();
+      }
     }
   }
 
