@@ -64,9 +64,13 @@ class Shield {
       }else if (shieldRad >65){
         radDir *= -1;
       }
-      }
+    }
   }
    
+  public void updateShield(PVector location) {
+    this.shipLoc = location; 
+  }
+  
   /**
   * Function drawShield()
   *
@@ -83,6 +87,7 @@ class Shield {
   */        
   void drawShield(){
   fill(#02f04a);
+  strokeWeight(1);
   stroke(#db0404);
   for (int s = 0; s<shieldDest.length; s++){
     if (shieldDest[s] == 0){

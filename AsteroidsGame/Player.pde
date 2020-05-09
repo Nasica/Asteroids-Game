@@ -440,7 +440,6 @@ class Player{
         || this.velocity.y < -DRIFT || this.velocity.y > DRIFT){
           this.velocity.mult(DECELERATION);
         }
-     
     decreaseFlame();
    
   }

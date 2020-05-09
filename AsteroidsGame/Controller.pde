@@ -335,6 +335,7 @@ class Controller {
         player.updateLives(-1);
           if(player.getLives() > 0){
             player = new Player(player.getLives(), player.getScore());
+            shield.updateShield(player.getLocation());
           }
       
           else{
@@ -363,6 +364,7 @@ class Controller {
    * Affects: Display
    */
   public void drawHUD() {
+    textAlign(LEFT);
     text("Lives:", HUD_MARGIN, HUD_HEIGHT);
 
     for (int i = 0; i < player.getLives(); i++) {
@@ -561,7 +563,7 @@ class Controller {
         }
       }
       if (collider.detectCollision(currentAsteroid, player.getBoundingBox())) {
-        asteroids.remove(i);
+        asteroidShot(i);
         player.setAlive(false);
       }
     }
