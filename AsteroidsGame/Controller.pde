@@ -557,7 +557,7 @@ class Controller {
       for (int j=0; j < bullets.length; j++){
         Bullets currentBullet = bullets[j];
         if (collider.detectCollision(currentAsteroid, currentBullet.getLocation())){
-          asteroidShot(i);
+          asteroidShot(i);          
         }
       }
       if (collider.detectCollision(currentAsteroid, player.getBoundingBox())) {
@@ -631,12 +631,13 @@ class Controller {
   */  
   public void asteroidShot(int asteroidIndex){
     Asteroid asteroid = asteroids.get(asteroidIndex);
+    asteroids.remove(asteroidIndex);
+    println(asteroid.getPointsValue());
+    player.addScore(asteroid.getPointsValue());
     if (asteroid.getSize() > 1){
       PVector destroyLocation = asteroid.getLocation();
       addNewAsteroids(NEW_ASTEROIDS_ON_DEST, destroyLocation, asteroid.getSize() - 1);
     }
-    asteroids.remove(asteroidIndex);
-    
   }
   
   /**
