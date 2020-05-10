@@ -130,8 +130,7 @@ class Bullets{
   */  
   public void drawBullets(){
     stroke(255,0,0);
-    strokeWeight(6);
-    point(this.location.x, this.location.y);
+    ellipse(this.location.x, this.location.y, 5, 5);
   }
   
   /**
