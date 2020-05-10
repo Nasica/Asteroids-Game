@@ -10,6 +10,7 @@ class Menu{
   PFont selectedFont = createFont("Serif.bold", 20, true);
   
   public Menu(ArrayList<String> menuItems) {
+   textAlign(CENTER); 
    this.menuItems = menuItems;
   }
   
@@ -22,7 +23,6 @@ class Menu{
   }
 
   public void drawMenuItem(String item, float xPos, float yPos, boolean isBold){
-    textAlign(CENTER);
     fill(255,0,0);
     textFont(normalFont);
     if (isBold){
