@@ -51,6 +51,9 @@ class Controller {
     this.sRIGHT = false;
     this.sDOWN = false;
     this.bullets = new Bullets[0];
+    //for (int i = 0; i < bullets.length; i++){
+    //  bullets[i] = new Bullets(player.getLocation(), player.getBearing());
+    //}
     shield = new Shield(player.getLocation(), player.getVelocity());
   }
 
@@ -73,6 +76,9 @@ class Controller {
     this.sLEFT = false;
     this.sRIGHT = false;
     this.sDOWN = false;
+    //for (int i = 0; i < bullets.length; i++){
+    //  bullets[i] = new Bullets(player.getLocation(), player.getBearing());
+    //}
     shield = new Shield(player.getLocation(), player.getVelocity());
   }  
 
@@ -96,6 +102,9 @@ class Controller {
     this.sLEFT = false;
     this.sRIGHT = false;
     this.sDOWN = false;
+    //for (int i = 0; i < bullets.length; i++){
+    //  bullets[i] = new Bullets(player.getLocation(), player.getBearing());
+    //}
     shield = new Shield(player.getLocation(), player.getVelocity());
   }
 
@@ -397,12 +406,14 @@ class Controller {
       popMatrix();
       popMatrix();
       player.decelerate();
+      newShield();
     } 
     
     else if(player.getLives() > 0) {
       if (this.explosionFrame < 130) {
         player.die(int(explosionFrame/10) * 192, player.getLocation());
         this.explosionFrame++;
+        newShield();
       }
       
       else {
@@ -759,6 +770,18 @@ class Controller {
     return(newAsteroid);
   }
   
+  public void newShield(){
+     if (player.alive == false){
+      for (int s = 0; s <shield.shieldDest.length; s++){
+        shield.shieldDest[s] = 1;
+      } 
+    }else{
+      for (int s = 0; s <shield.shieldDest.length; s++){
+        shield.shieldDest[s] = 0;
+      }
+    }
+  }
+  
   /**
   * Function: updateShield()
   *
@@ -774,8 +797,11 @@ class Controller {
   * Affects: Shield object
   */  
   public void updateShield(){
-    shield.shieldPopulate();
+    shield.shieldPopulate(player.getLocation());
     shield.drawShield();
+    for(int i = 0; i<shield.circle.length; i++){
+      shape(shield.circle[i]);
+    }
  }  
   
 }

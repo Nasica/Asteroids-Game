@@ -21,6 +21,7 @@ class Shield {
   float initialShieldRad = 10;
   float radDir = 1;
   float[] shieldDest = {0, 0, 0, 0};
+  PShape[] circle = new PShape[4];
   
   //Constructor
   
@@ -52,7 +53,7 @@ class Shield {
   *
   * Affects: Nil
   */
-  public void shieldPopulate(){
+  public void shieldPopulate(PVector shipLoc){
     for (int i = 0; i <sx.length; i++){
       sx[i] = shipLoc.x + cos(radians(angle+angleInc))*(shieldRad);
       sy[i] = shipLoc.y + sin(radians(angle+angleInc))*(shieldRad);
@@ -82,11 +83,14 @@ class Shield {
   * Affects: Nil
   */        
   void drawShield(){
-  fill(#02f04a);
-  stroke(#db0404);
+//  fill(#02f04a);
+//  stroke(#db0404);
   for (int s = 0; s<shieldDest.length; s++){
     if (shieldDest[s] == 0){
-      ellipse(sx[s], sy[s], initialShieldRad, initialShieldRad);
+       circle[s] = createShape(ELLIPSE, sx[s], sy[s], initialShieldRad, initialShieldRad);
+       circle[s].setStroke(#db0404);
+       circle[s].setFill(#02f04a);
+       circle[s].endShape();
    }
   }
   }

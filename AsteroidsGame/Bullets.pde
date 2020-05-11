@@ -3,9 +3,9 @@
 *  
 *  @author Luke Dart, Scott Dimmock, Mark Gatus
 *  @version 1.0
-*  @since 04 May 2020 (Mark Gatus)
+*  @since 09 May 2020 (Luke Dart)
 *
-*  Filename: Shield.pde
+*  Filename: Bullets.pde
 *  Date:     24 April 2020
 */
 
@@ -15,6 +15,9 @@ class Bullets{
   private PVector velocity;
   private float bearing;
   private final float SHOT_SPEED = 0.5;
+  private int firstFrame;
+  private final int FRAME_LIFE = 50;
+  private boolean active;
 
   
   // Constructors
@@ -51,9 +54,11 @@ class Bullets{
       this.velocity = new PVector((360 - this.bearing) * SHOT_SPEED * -1, (this.bearing - 270) * SHOT_SPEED * -1 );
     }
    this.velocity.limit(8);
+   this.firstFrame = frameCount;
+   this.active = true;
   }
   
-  // Accsessor
+  // Accsessors
   
   /**
   * Functions: getLocation()
@@ -70,6 +75,42 @@ class Bullets{
   */  
   public PVector getLocation(){
     return this.location;
+  }
+
+  /**
+  * Functions: getActive()
+  *
+  * @param Nil
+  *
+  * @return boolean 
+  *
+  * Desc: returns state of the bullet.
+  * 
+  * Calls: Nil
+  *
+  * Affects: Nil
+  */  
+  public boolean getActive(){
+    return this.active;
+  }
+
+  // Mutator
+
+  /**
+  * Functions: setActive()
+  *
+  * @param boolean
+  *
+  * @return Nil
+  *
+  * Desc: Sets bullet active state.
+  * 
+  * Calls: Nil
+  *
+  * Affects: active
+  */  
+  public void setActive(boolean state){
+    this.active = state;
   }
     
   // Void Methods
@@ -89,8 +130,7 @@ class Bullets{
   */  
   public void drawBullets(){
     stroke(255,0,0);
-    strokeWeight(6);
-    point(this.location.x, this.location.y);
+    ellipse(this.location.x, this.location.y, 5, 5);
   }
   
   /**
@@ -129,13 +169,20 @@ class Bullets{
   *
   * Desc: Updates the position of the bullets
   *
-  * Calls: Nil
+  * Calls: add()
   *
-  * Affects: Nil
+  * Affects: location
+  *          active
   */    
   
   public void updateBullets(){
-    this.location.add(velocity);
+    if(this.firstFrame + this.FRAME_LIFE > frameCount){
+      this.location.add(velocity);
+    }
+    
+    else{
+      this.active = false;
+    }
   }
   
 }
