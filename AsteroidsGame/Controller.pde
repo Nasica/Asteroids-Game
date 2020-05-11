@@ -21,6 +21,8 @@ class Controller {
   private final float SHIP_ROTATION = 3.5;
   private final int HUD_MARGIN = 20;
   private final int HUD_HEIGHT = 32;
+  private final int TEXT_SIZE = 20;
+  private PFont hudFont = createFont("Serif.plain", TEXT_SIZE, true);
   private ArrayList<Asteroid> asteroids;
   private Bullets[] bullets;
   private Shield shield;
@@ -49,9 +51,6 @@ class Controller {
     this.sRIGHT = false;
     this.sDOWN = false;
     this.bullets = new Bullets[0];
-    //for (int i = 0; i < bullets.length; i++){
-    //  bullets[i] = new Bullets(player.getLocation(), player.getBearing());
-    //}
     shield = new Shield(player.getLocation(), player.getVelocity());
   }
 
@@ -74,9 +73,6 @@ class Controller {
     this.sLEFT = false;
     this.sRIGHT = false;
     this.sDOWN = false;
-    //for (int i = 0; i < bullets.length; i++){
-    //  bullets[i] = new Bullets(player.getLocation(), player.getBearing());
-    //}
     shield = new Shield(player.getLocation(), player.getVelocity());
   }  
 
@@ -100,9 +96,6 @@ class Controller {
     this.sLEFT = false;
     this.sRIGHT = false;
     this.sDOWN = false;
-    //for (int i = 0; i < bullets.length; i++){
-    //  bullets[i] = new Bullets(player.getLocation(), player.getBearing());
-    //}
     shield = new Shield(player.getLocation(), player.getVelocity());
   }
 
@@ -209,6 +202,24 @@ class Controller {
     }
   }
 
+  /**
+   * Function: moveMenu()
+   * 
+   * @param Nil
+   *
+   * @return void
+   *
+   * desc: Moves the main menu selected item up and down
+   *
+   * calls: menuIndexUp()
+   *        menuIndexDown()
+   *        drawMainMenu()
+   *        sDOWN
+   *        sUP
+   *        gameStarted
+   *
+   * Affects: Nil
+   */
   public void moveMenu(){
     if (!gameStarted){
       if (sDOWN){
@@ -225,6 +236,19 @@ class Controller {
     }
   }
 
+  /**
+   * Function: menuIndexDown()
+   * 
+   * @param Nil
+   *
+   * @return void
+   *
+   * desc: Increments the selected menu item index
+   *
+   * calls: Menu.getMenuLenth()
+   *
+   * Affects: menuIndex
+   */
   private void menuIndexDown(){
     if (menuIndex == mainMenu.getMenuLength() - 1){
       menuIndex = 0;    
@@ -234,6 +258,19 @@ class Controller {
     
   }
 
+  /**
+   * Function: menuIndexUp()
+   * 
+   * @param Nil
+   *
+   * @return void
+   *
+   * desc: Decrements the selected menu item index
+   *
+   * calls: Menu.getMenuLenth()
+   *
+   * Affects: menuIndex
+   */
   private void menuIndexUp(){
     if (menuIndex == 0){
       menuIndex = mainMenu.getMenuLength() - 1;
@@ -242,6 +279,19 @@ class Controller {
     }
   }
   
+  /**
+   * Function: menuAction()
+   * 
+   * @param Nil
+   *
+   * @return void
+   *
+   * desc: Carrys out the required action when selecting a menu item 
+   *
+   * calls: menuIndex
+   *
+   * Affects: gameStarted
+   */
   public void menuAction(){
     switch(menuIndex){
       
@@ -249,17 +299,29 @@ class Controller {
       case 0:
         gameStarted = true;
         break;
-      //High Scores
-      case 1:
-        break;
       //Quit
-      case 2:
+      case 1:
         exit();
         break;
       default:
     }
   }
   
+  /**
+   * Function: drawMainMenu()
+   * 
+   * @param Nil
+   *
+   * @return void
+   *
+   * desc: Draws the Main Menu to the screen 
+   *
+   * calls: Menu.getMenuLength()
+   *        Menu.getMenuItems()
+   *        gameStarted
+   *
+   * Affects: gameStarted
+   */
   public void drawMainMenu(){
     if(!gameStarted){
       int textSize = 20;
@@ -277,6 +339,19 @@ class Controller {
     }
   }
   
+  /**
+   * Function: getGameState()
+   * 
+   * @param nil
+   *
+   * @return boolean
+   *
+   * desc: Returns if the game has started
+   *
+   * calls: nil 
+   *
+   * Affects: nil 
+   */
   public boolean getGameState(){
     return(this.gameStarted); 
   }
@@ -344,6 +419,7 @@ class Controller {
       }
       
      else{
+       textAlign(CENTER);
       text("GAME OVER", width / 2, height / 2 - textWidth("GAME")); 
      }
   }
@@ -363,6 +439,8 @@ class Controller {
    * Affects: Display
    */
   public void drawHUD() {
+    textAlign(LEFT);
+    textFont(hudFont);
     text("Lives:", HUD_MARGIN, HUD_HEIGHT);
 
     for (int i = 0; i < player.getLives(); i++) {
@@ -371,8 +449,6 @@ class Controller {
 
     text("Score: " + player.getScore(), width - HUD_MARGIN - textWidth("Score: XXXXX"), HUD_HEIGHT);
   }
-
-  //Scott's New code below
 
   /**
    * Function: randomPointOnCirc()
@@ -557,11 +633,12 @@ class Controller {
       for (int j=0; j < bullets.length; j++){
         Bullets currentBullet = bullets[j];
         if (collider.detectCollision(currentAsteroid, currentBullet.getLocation())){
-          asteroidShot(i);          
+          asteroidShot(i, true);          
         }
       }
       if (collider.detectCollision(currentAsteroid, player.getBoundingBox())) {
-        asteroids.remove(i);
+        //asteroids.remove(i);
+        asteroidShot(i, false);
         player.setAlive(false);
       }
     }
@@ -629,11 +706,12 @@ class Controller {
   * Affects: ArrayList<Asteroid> asteroids
   *          int NEW_ASTEROIDS_ON_DEST
   */  
-  public void asteroidShot(int asteroidIndex){
+  public void asteroidShot(int asteroidIndex, boolean byWeapon){
     Asteroid asteroid = asteroids.get(asteroidIndex);
     asteroids.remove(asteroidIndex);
-    println(asteroid.getPointsValue());
-    player.addScore(asteroid.getPointsValue());
+    if(byWeapon) {
+      player.addScore(asteroid.getPointsValue());
+    }
     if (asteroid.getSize() > 1){
       PVector destroyLocation = asteroid.getLocation();
       addNewAsteroids(NEW_ASTEROIDS_ON_DEST, destroyLocation, asteroid.getSize() - 1);

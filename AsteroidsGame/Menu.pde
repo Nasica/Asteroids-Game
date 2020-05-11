@@ -1,28 +1,81 @@
+/**
+*  Menu class.
+*  
+*  @author Luke Dart, Scott Dimmock, Mark Gatus
+*  @version 0.1
+*  @since 09 May 2020 (Scott Dimmock)
+*  
+*  Filename: Menu.pde
+*  Date:     09 May 2020
+*
+*/
 class Menu{
-  
+  // The pixel size of the text
+  private final int textSize = 20;
+  //ArrayList containing all the menu items
   private ArrayList<String> menuItems = new ArrayList<String>();
+  //The font for unselected items
+  private PFont normalFont 
+    = createFont("Serif.plain", textSize, true);
+  //The font for selected items
+  private PFont selectedFont 
+    = createFont("Serif.bold", textSize, true);
   
-  //Distance between each row of text
-  private int textDistance = 40; 
-  private int textOffset = textDistance * -1;
-  
-  PFont normalFont = createFont("Serif.plain", 20, true);
-  PFont selectedFont = createFont("Serif.bold", 20, true);
-  
+  /**
+   * Function: Menu()
+   *
+   * @param menuItems ArrayList<String> The array of menu items to display
+   *
+   * @return nil
+   *
+   * Desc: Constructor creates a new menu based off options passed from a 
+   *       child class.
+   */
   public Menu(ArrayList<String> menuItems) {
-   textAlign(CENTER); 
    this.menuItems = menuItems;
   }
   
+  /**
+   * Function: getMenuLength()
+   *
+   * @param nil
+   *
+   * @return int
+   *
+   * Desc: Returns the number of items in the menu 
+   */
   public int getMenuLength(){
     return(this.menuItems.size());
   }
 
+  /**
+   * Function: getMenuItems()
+   *
+   * @param index int     The index of the menuitem to get
+   *
+   * @return String       The text of the menu item
+   *
+   * Desc: Returns the text of a specified menu item in the array
+   */
   public String getMenuItems(int index){
     return(this.menuItems.get(index));
   }
 
+  /**
+   * Function: drawMenuItem()
+   *
+   * @param item String     The menu text to display
+   *        xPos float      The x position to draw the text in (Aligned Centered)
+   *        yPos float      The y position to draw the text in (Aligned Centered)
+   *        isBold boolean  Represents if this menu item is the currently selected
+   *                        item
+   * @return void
+   *
+   * Desc: Draws a specified string to the screen in a given position either
+   *       bolded or unbold.
+   */
   public void drawMenuItem(String item, float xPos, float yPos, boolean isBold){
+    textAlign(CENTER);
     fill(255,0,0);
     textFont(normalFont);
     if (isBold){
@@ -32,37 +85,37 @@ class Menu{
     text(item, xPos, yPos);
     
   }
-
-  public void drawMenu(int selectedIndex){
-    for (int i = 0; i < menuItems.size(); i++){
-      if (i == selectedIndex){
-        textFont(selectedFont);
-        fill(255,0,0);
-        text(menuItems.get(i), width/2, height/2 + textOffset);
-        textOffset = textOffset + textDistance;
-      } else {
-        textFont(normalFont);
-        fill(255,0,0);
-        text(menuItems.get(i), width/2, height/2 + textOffset);
-        textOffset = textOffset + textDistance;
-      }
-    }
-    textOffset = textDistance * -1;
-  }
-
-  //class highScoreMenu extends Menu{
-  //  this.menuItems.add("Back");
-  //}
 }
 
   
+/**
+*  MainMenu class. Extends Menu
+*  
+*  @author Luke Dart, Scott Dimmock, Mark Gatus
+*  @version 0.1
+*  @since 09 May 2020 (Scott Dimmock)
+*  
+*  Filename: Menu.pde
+*  Date:     09 May 2020
+*
+*/
+
 public class MainMenu extends Menu{
   
+  /**
+   * Function: MainMenu()
+   *
+   * @param nil
+   *
+   * @return Menu
+   *
+   * Desc: Constructor calls the parent constructor Menu with a given list
+   *       of strings to represent a menu items.
+   */
   public MainMenu(){
     super(new ArrayList<String>() {
       {
         add("Play Game");
-        add("High Score");
         add("Exit Game");
       }
     });
