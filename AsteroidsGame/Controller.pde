@@ -28,6 +28,7 @@ class Controller {
   private Shield shield;
   private MainMenu mainMenu = new MainMenu();
   private boolean gameStarted = false;
+  private boolean gameOver = false;
   private final int NEW_ASTEROIDS_ON_DEST = 3;
 
   // Constructors
@@ -52,6 +53,7 @@ class Controller {
     this.sDOWN = false;
     this.bullets = new Bullets[0];
     this.addNewAsteroids(1);
+    this.gameOver = false;
     //for (int i = 0; i < bullets.length; i++){
     //  bullets[i] = new Bullets(player.getLocation(), player.getBearing());
     //}
@@ -77,6 +79,7 @@ class Controller {
     this.sLEFT = false;
     this.sRIGHT = false;
     this.sDOWN = false;
+    this.gameOver = false;
     //for (int i = 0; i < bullets.length; i++){
     //  bullets[i] = new Bullets(player.getLocation(), player.getBearing());
     //}
@@ -103,6 +106,7 @@ class Controller {
     this.sLEFT = false;
     this.sRIGHT = false;
     this.sDOWN = false;
+    this.gameOver = false;
     //for (int i = 0; i < bullets.length; i++){
     //  bullets[i] = new Bullets(player.getLocation(), player.getBearing());
     //}
@@ -433,7 +437,7 @@ class Controller {
      else{
        textAlign(CENTER);
        text("GAME OVER", width / 2, height + 50 / 2 - textWidth("GAME")); 
-       gameStarted = false;
+       gameOver = true;
      }
   }
 
@@ -808,5 +812,9 @@ class Controller {
       shape(shield.circle[i]);
     }
  }  
+ 
+ public boolean getGameOver(){
+    return this.gameOver;
+ }
   
 }

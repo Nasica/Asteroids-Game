@@ -29,8 +29,10 @@ void draw(){
  controller.updateBullets();
  controller.updateShield();
  controller.drawHUD();
- 
  controller.drawMainMenu();
+ if (controller.getGameOver()){
+    controller = new Controller(); 
+ }
 }
 
 void keyPressed() {
