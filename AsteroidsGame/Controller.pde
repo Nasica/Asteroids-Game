@@ -51,6 +51,7 @@ class Controller {
     this.sRIGHT = false;
     this.sDOWN = false;
     this.bullets = new Bullets[0];
+    this.addNewAsteroids(1);
     //for (int i = 0; i < bullets.length; i++){
     //  bullets[i] = new Bullets(player.getLocation(), player.getBearing());
     //}
@@ -431,7 +432,8 @@ class Controller {
       
      else{
        textAlign(CENTER);
-      text("GAME OVER", width / 2, height / 2 - textWidth("GAME")); 
+       text("GAME OVER", width / 2, height + 50 / 2 - textWidth("GAME")); 
+       gameStarted = false;
      }
   }
 
@@ -643,8 +645,9 @@ class Controller {
       Asteroid currentAsteroid = asteroids.get(i);
       for (int j=0; j < bullets.length; j++){
         Bullets currentBullet = bullets[j];
-        if (collider.detectCollision(currentAsteroid, currentBullet.getLocation())){
-          asteroidShot(i, true);          
+        if (collider.detectCollision(currentAsteroid, currentBullet.getLocation()) && bullets[j].getActive()){
+          asteroidShot(i, true);  
+          bullets[j].setActive(false);
         }
       }
       if (collider.detectCollision(currentAsteroid, player.getBoundingBox())) {
@@ -693,9 +696,11 @@ class Controller {
   */
   public void updateBullets(){
     for (int i = 0; i<bullets.length; i++){
-    bullets[i].drawBullets();
-    bullets[i].updateBullets();
-    bullets[i].checkEdges();
+      if(bullets[i].getActive()){
+        bullets[i].drawBullets();
+        bullets[i].updateBullets();
+        bullets[i].checkEdges();
+      }
     }
   }
 
