@@ -728,7 +728,7 @@ class Controller {
         player.setAlive(false);
       }
       for (int k = 0; k < 4; k++){
-        if (collider.detectCollision(currentAsteroid, shield.sx[k], shield.sy[k])){
+        if (collider.detectCollision(currentAsteroid, new PVector(shield.sx[k], shield.sy[k]))){
           if (shield.shieldDest[k] == 0) {
              asteroidShot(i, true);
              explosion.play();
