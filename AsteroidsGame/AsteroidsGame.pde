@@ -32,10 +32,12 @@ void draw(){
  controller.updateShield();
  controller.drawHUD();
  controller.drawMainMenu();
+ controller.checkNewLevel();
  if (controller.getGameOver()){
-    controller = new Controller(); 
+   controller = new Controller();
  }
 }
+
 
 void keyPressed() {
   if (key == CODED) {
@@ -53,9 +55,6 @@ void keyPressed() {
       controller.setSDOWN(true);
       controller.moveMenu();
     }
-  }
-  if (key == ' ') {
-    controller.createBullet();
   }
   if (key == ENTER) {
      controller.menuAction(); 
@@ -76,6 +75,9 @@ void keyReleased() {
     if (keyCode == DOWN) {
       controller.setSDOWN(false);
     }
+  }
+  if (key == ' ') {
+    controller.createBullet();
   }
 }
   

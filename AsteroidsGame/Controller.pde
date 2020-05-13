@@ -34,6 +34,8 @@ class Controller {
   private boolean gameOver;
   private final int NEW_ASTEROIDS_ON_DEST = 3;
   private HighScore hs;
+  private int playerLevel;
+  private int asteroidsToGenerate = 1;
 
   // Constructors
 
@@ -56,10 +58,11 @@ class Controller {
     this.sRIGHT = false;
     this.sDOWN = false;
     this.bullets = new Bullets[0];
-    this.addNewAsteroids(1);
+    this.addNewAsteroids(asteroidsToGenerate);
     this.gameOver = false;
     this.hs = new HighScore();
     hs.initialise();
+    this.playerLevel = 1;
     //for (int i = 0; i < bullets.length; i++){
     //  bullets[i] = new Bullets(player.getLocation(), player.getBearing());
     //}
@@ -88,6 +91,7 @@ class Controller {
     this.gameOver = false;
     this.hs = new HighScore();
     hs.initialise();
+    this.playerLevel = 1;
     //for (int i = 0; i < bullets.length; i++){
     //  bullets[i] = new Bullets(player.getLocation(), player.getBearing());
     //}
@@ -117,6 +121,7 @@ class Controller {
     this.gameOver = false;
     this.hs = new HighScore();
     hs.initialise();
+    this.playerLevel = 1;
     //for (int i = 0; i < bullets.length; i++){
     //  bullets[i] = new Bullets(player.getLocation(), player.getBearing());
     //}
@@ -427,6 +432,7 @@ class Controller {
       if (this.explosionFrame < 130) {
         player.die(int(explosionFrame/10) * 192, player.getLocation());
         this.explosionFrame++;
+        this.bullets = new Bullets[0];
         newShield();
       }
       
@@ -435,6 +441,7 @@ class Controller {
         player.updateLives(-1);
           if(player.getLives() > 0){
             player = new Player(player.getLives(), player.getScore());
+            this.bullets = new Bullets[0];
             newShield();
           }
       
@@ -670,7 +677,7 @@ class Controller {
       for (int j=0; j < bullets.length; j++){
         Bullets currentBullet = bullets[j];
         if (collider.detectCollision(currentAsteroid, currentBullet.getLocation()) && bullets[j].getActive()){
-          asteroidShot(i, true);  
+          asteroidShot(i, true);
           bullets[j].setActive(false);
           explosion.play();
         }
@@ -737,6 +744,20 @@ class Controller {
         bullets[i].updateBullets();
         bullets[i].checkEdges();
       }
+    }
+  }
+  
+  public void checkNewLevel(){
+    if (asteroids.size() == 0){
+      playerLevel++;
+      calcAsteroidsToGenerate();
+      this.addNewAsteroids(asteroidsToGenerate);
+    }
+  }
+  
+  private void calcAsteroidsToGenerate(){
+    if ((playerLevel % 3) == 0){
+      asteroidsToGenerate++; 
     }
   }
 
