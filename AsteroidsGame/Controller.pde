@@ -479,8 +479,20 @@ class Controller {
      }
   }
 
+  /**
+   * Function: waitForEnterPress()
+   * 
+   * @param Nil
+   *
+   * @return void
+   *
+   * desc: Waits for the enter key to be pressed in order to restart the game
+   *
+   * calls: Nil
+   *
+   * Affects: sENTER
+   */
   private void waitForEnterPress(){
-
    if(sENTER){
      gameOver = true;
    }
@@ -538,6 +550,7 @@ class Controller {
 
     return(new PVector(xPoint, yPoint));
   }
+  
   /**
    * Function: randomVelocity()
    *
@@ -715,7 +728,7 @@ class Controller {
         player.setAlive(false);
       }
       for (int k = 0; k < 4; k++){
-        if (collider.detectCollision(currentAsteroid, shield.sx[k], shield.sy[k])){
+        if (collider.detectCollision(currentAsteroid, new PVector(shield.sx[k], shield.sy[k]))){
           if (shield.shieldDest[k] == 0) {
              asteroidShot(i, true);
              explosion.play();
@@ -773,6 +786,20 @@ class Controller {
     }
   }
   
+  /**
+  * Function: checkNewLevel()
+  *
+  * @param Nil
+  *
+  * @return void
+  *
+  * Desc: Checks for when no asteroids exist in order to start the next level
+  *
+  * Calls: calcAsteroidsToGenerate()
+  *        addNewAsteroids()
+  *
+  * Affects: playerLevel
+  */
   public void checkNewLevel(){
     if (asteroids.size() == 0){
       playerLevel++;
@@ -781,6 +808,20 @@ class Controller {
     }
   }
   
+  /**
+  * Function: calcAsteroidsToGenerate()
+  *
+  * @param Nil
+  *
+  * @return void
+  *
+  * Desc: Calculates the number of asteroids to generate based on the player level
+  *       with 1 new asteroid added at each 3rd level.
+  *
+  * Calls: 
+  *
+  * Affects: asteroidsToGenerate
+  */
   private void calcAsteroidsToGenerate(){
     if ((playerLevel % 3) == 0){
       asteroidsToGenerate++; 
@@ -892,6 +933,19 @@ class Controller {
     //}
  }  
  
+  /**
+  * Function: getGameOver()
+  *
+  * @param Nil
+  *
+  * @return boolean
+  *
+  * Desc: Returns the state of the gameOver boolean.
+  *
+  * Calls: nil
+  *
+  * Affects: nil
+  */  
  public boolean getGameOver(){
     return this.gameOver;
  }

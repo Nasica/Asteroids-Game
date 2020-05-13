@@ -39,6 +39,23 @@ public class CollisionDetect {
         return(false);
     }
 
+   /**
+   * Function: detectCollision()
+   *
+   * @param asteroid Asteroid    An Asteroid object
+   * @param point PVector    The point to check for collisions against the asteroid.
+   *
+   * @return boolean
+   *
+   * Desc: Checks if a vertex in a PVector object has collided with an asteroid object.
+   *
+   * Calls: PShape.getVertexCount()
+   *        PVector.getVertex()
+   *        Asteroid.getLocation()
+   *        Asteroid.getImageSize
+   *
+   * Affects: Nil
+   */
     public boolean detectCollision(Asteroid asteroid, PVector point){
       if ((dist(asteroid.getLocation().x, asteroid.getLocation().y, 
               point.x, point.y) - asteroid.getImageSize().x/4) < 0){
@@ -48,6 +65,7 @@ public class CollisionDetect {
       return(false);
     }
     
+    /*
     public boolean detectCollision(Asteroid asteroid, float shieldX, float shieldY){        
       if ((dist(asteroid.getLocation().x, asteroid.getLocation().y,               
         shieldX, shieldY) - asteroid.getImageSize().x/4) < 0){        
@@ -55,4 +73,5 @@ public class CollisionDetect {
       }       
       return(false);    
     }
+    */
 }
