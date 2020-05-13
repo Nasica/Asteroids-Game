@@ -10,6 +10,9 @@
 *
 */
 
+import processing.sound.*;
+SoundFile laser;
+SoundFile explosion;
 
 class Controller {
   private Player player;
@@ -28,7 +31,7 @@ class Controller {
   private Shield shield;
   private MainMenu mainMenu = new MainMenu();
   private boolean gameStarted = false;
-  private boolean gameOver = false;
+  private boolean gameOver;
   private final int NEW_ASTEROIDS_ON_DEST = 3;
 
   // Constructors
@@ -411,7 +414,6 @@ class Controller {
       popMatrix();
       popMatrix();
       player.decelerate();
-      newShield();
     } 
     
     else if(player.getLives() > 0) {
@@ -426,6 +428,7 @@ class Controller {
         player.updateLives(-1);
           if(player.getLives() > 0){
             player = new Player(player.getLives(), player.getScore());
+            newShield();
           }
       
           else{
@@ -652,12 +655,23 @@ class Controller {
         if (collider.detectCollision(currentAsteroid, currentBullet.getLocation()) && bullets[j].getActive()){
           asteroidShot(i, true);  
           bullets[j].setActive(false);
+          explosion.play();
         }
       }
       if (collider.detectCollision(currentAsteroid, player.getBoundingBox())) {
         //asteroids.remove(i);
         asteroidShot(i, false);
+        explosion.play();
         player.setAlive(false);
+      }
+      for (int k = 0; k < 4; k++){
+        if (collider.detectCollision(currentAsteroid, shield.sx[k], shield.sy[k])){
+          if (shield.shieldDest[k] == 0) {
+             asteroidShot(i, true);
+             explosion.play();
+             shield.shieldDest[k] = 1;
+          }
+        }
       }
     }
   }
@@ -679,6 +693,7 @@ class Controller {
   public void createBullet(){
     if (gameStarted){
       Bullets bullet = new Bullets(player.getLocation(), player.getBearing());
+      laser.play();
       bullets = (Bullets[]) append(bullets, bullet);
     }
   }
@@ -808,9 +823,9 @@ class Controller {
   public void updateShield(){
     shield.shieldPopulate(player.getLocation());
     shield.drawShield();
-    for(int i = 0; i<shield.circle.length; i++){
-      shape(shield.circle[i]);
-    }
+    //for(int i = 0; i<shield.circle.length; i++){
+    //  shape(shield.circle[i]);
+    //}
  }  
  
  public boolean getGameOver(){
