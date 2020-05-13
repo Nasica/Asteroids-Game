@@ -47,4 +47,12 @@ public class CollisionDetect {
       }
       return(false);
     }
+    
+    public boolean detectCollision(Asteroid asteroid, float shieldX, float shieldY){        
+      if ((dist(asteroid.getLocation().x, asteroid.getLocation().y,               
+        shieldX, shieldY) - asteroid.getImageSize().x/4) < 0){        
+          return(true);           
+      }       
+      return(false);    
+    }
 }

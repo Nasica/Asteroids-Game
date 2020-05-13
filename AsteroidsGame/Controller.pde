@@ -10,6 +10,9 @@
 *
 */
 
+import processing.sound.*;
+SoundFile laser;
+SoundFile explosion;
 
 class Controller {
   private Player player;
@@ -28,6 +31,7 @@ class Controller {
   private Shield shield;
   private MainMenu mainMenu = new MainMenu();
   private boolean gameStarted = false;
+  private boolean gameOver;
   private final int NEW_ASTEROIDS_ON_DEST = 3;
 
   // Constructors
@@ -52,6 +56,7 @@ class Controller {
     this.sDOWN = false;
     this.bullets = new Bullets[0];
     this.addNewAsteroids(1);
+    this.gameOver = false;
     //for (int i = 0; i < bullets.length; i++){
     //  bullets[i] = new Bullets(player.getLocation(), player.getBearing());
     //}
@@ -77,6 +82,7 @@ class Controller {
     this.sLEFT = false;
     this.sRIGHT = false;
     this.sDOWN = false;
+    this.gameOver = false;
     //for (int i = 0; i < bullets.length; i++){
     //  bullets[i] = new Bullets(player.getLocation(), player.getBearing());
     //}
@@ -103,6 +109,7 @@ class Controller {
     this.sLEFT = false;
     this.sRIGHT = false;
     this.sDOWN = false;
+    this.gameOver = false;
     //for (int i = 0; i < bullets.length; i++){
     //  bullets[i] = new Bullets(player.getLocation(), player.getBearing());
     //}
@@ -407,7 +414,6 @@ class Controller {
       popMatrix();
       popMatrix();
       player.decelerate();
-      newShield();
     } 
     
     else if(player.getLives() > 0) {
@@ -422,6 +428,7 @@ class Controller {
         player.updateLives(-1);
           if(player.getLives() > 0){
             player = new Player(player.getLives(), player.getScore());
+            newShield();
           }
       
           else{
@@ -433,7 +440,7 @@ class Controller {
      else{
        textAlign(CENTER);
        text("GAME OVER", width / 2, height + 50 / 2 - textWidth("GAME")); 
-       gameStarted = false;
+       gameOver = true;
      }
   }
 
@@ -648,12 +655,23 @@ class Controller {
         if (collider.detectCollision(currentAsteroid, currentBullet.getLocation()) && bullets[j].getActive()){
           asteroidShot(i, true);  
           bullets[j].setActive(false);
+          explosion.play();
         }
       }
       if (collider.detectCollision(currentAsteroid, player.getBoundingBox())) {
         //asteroids.remove(i);
         asteroidShot(i, false);
+        explosion.play();
         player.setAlive(false);
+      }
+      for (int k = 0; k < 4; k++){
+        if (collider.detectCollision(currentAsteroid, shield.sx[k], shield.sy[k])){
+          if (shield.shieldDest[k] == 0) {
+             asteroidShot(i, true);
+             explosion.play();
+             shield.shieldDest[k] = 1;
+          }
+        }
       }
     }
   }
@@ -675,6 +693,7 @@ class Controller {
   public void createBullet(){
     if (gameStarted){
       Bullets bullet = new Bullets(player.getLocation(), player.getBearing());
+      laser.play();
       bullets = (Bullets[]) append(bullets, bullet);
     }
   }
@@ -804,9 +823,13 @@ class Controller {
   public void updateShield(){
     shield.shieldPopulate(player.getLocation());
     shield.drawShield();
-    for(int i = 0; i<shield.circle.length; i++){
-      shape(shield.circle[i]);
-    }
+    //for(int i = 0; i<shield.circle.length; i++){
+    //  shape(shield.circle[i]);
+    //}
  }  
+ 
+ public boolean getGameOver(){
+    return this.gameOver;
+ }
   
 }

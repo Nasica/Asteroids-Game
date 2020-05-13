@@ -12,7 +12,7 @@
 
 
 class Asteroid{
-    public final int MIN_SPEED = 3;
+    public final int MIN_SPEED = 1;
     public final int MAX_SPEED = 5;
     private float MIN_ROT_SPEED = 0.1;
     private float MAX_ROT_SPEED = 3;

@@ -17,6 +17,8 @@ void setup(){
  size(800,800);
  textSize(15);
  controller = new Controller();
+ laser = new SoundFile(this, "assets/sounds/Laser.mp3");
+ explosion = new SoundFile(this, "assets/sounds/Explosion.mp3");
  
 }
 
@@ -29,8 +31,10 @@ void draw(){
  controller.updateBullets();
  controller.updateShield();
  controller.drawHUD();
- 
  controller.drawMainMenu();
+ if (controller.getGameOver()){
+    controller = new Controller(); 
+ }
 }
 
 void keyPressed() {
