@@ -58,6 +58,7 @@ void keyPressed() {
   }
   if (key == ENTER) {
      controller.menuAction(); 
+     controller.setENTER(true);
   }
 }
 
@@ -78,6 +79,9 @@ void keyReleased() {
   }
   if (key == ' ') {
     controller.createBullet();
+  }
+  if (keyCode == ENTER) {
+    controller.setENTER(false);
   }
 }
   
