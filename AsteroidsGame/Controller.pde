@@ -33,6 +33,7 @@ class Controller {
   private boolean gameStarted = false;
   private boolean gameOver;
   private final int NEW_ASTEROIDS_ON_DEST = 3;
+  private HighScore hs;
 
   // Constructors
 
@@ -57,6 +58,8 @@ class Controller {
     this.bullets = new Bullets[0];
     this.addNewAsteroids(1);
     this.gameOver = false;
+    this.hs = new HighScore();
+    hs.initialise();
     //for (int i = 0; i < bullets.length; i++){
     //  bullets[i] = new Bullets(player.getLocation(), player.getBearing());
     //}
@@ -83,6 +86,8 @@ class Controller {
     this.sRIGHT = false;
     this.sDOWN = false;
     this.gameOver = false;
+    this.hs = new HighScore();
+    hs.initialise();
     //for (int i = 0; i < bullets.length; i++){
     //  bullets[i] = new Bullets(player.getLocation(), player.getBearing());
     //}
@@ -110,6 +115,8 @@ class Controller {
     this.sRIGHT = false;
     this.sDOWN = false;
     this.gameOver = false;
+    this.hs = new HighScore();
+    hs.initialise();
     //for (int i = 0; i < bullets.length; i++){
     //  bullets[i] = new Bullets(player.getLocation(), player.getBearing());
     //}
@@ -440,6 +447,7 @@ class Controller {
      else{
        textAlign(CENTER);
        text("GAME OVER", width / 2, height + 50 / 2 - textWidth("GAME")); 
+       checkHighScore(player.getScore());
        gameOver = true;
      }
   }
@@ -468,6 +476,8 @@ class Controller {
     }
 
     text("Score: " + player.getScore(), width - HUD_MARGIN - textWidth("Score: XXXXX"), HUD_HEIGHT);
+    textAlign(CENTER);
+    text("High Score: " + hs.getScore(), width/2, HUD_HEIGHT);
   }
 
   /**
@@ -531,6 +541,13 @@ class Controller {
    */
   private int randomDir() {
     return(-1 + (int)random(2) * 2);
+  }
+  
+  private void checkHighScore(int score){
+   if (hs.isHighest(score)){
+     hs.setScore(score);
+     hs.store();
+   }
   }
 
   /**
