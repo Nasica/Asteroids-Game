@@ -19,7 +19,7 @@ class Controller {
   private CollisionDetect collider;
   private int explosionFrame;
   private int menuIndex = 0;
-  private boolean sUP, sDOWN, sLEFT, sRIGHT; 
+  private boolean sUP, sDOWN, sLEFT, sRIGHT, sENTER; 
   private final float SHIP_ACCELERATION = 0.1;
   private final float SHIP_ROTATION = 3.5;
   private final int HUD_MARGIN = 20;
@@ -57,6 +57,7 @@ class Controller {
     this.sLEFT = false;
     this.sRIGHT = false;
     this.sDOWN = false;
+    this.sENTER = false;
     this.bullets = new Bullets[0];
     this.addNewAsteroids(asteroidsToGenerate);
     this.gameOver = false;
@@ -88,6 +89,7 @@ class Controller {
     this.sLEFT = false;
     this.sRIGHT = false;
     this.sDOWN = false;
+    this.sENTER = false;
     this.gameOver = false;
     this.hs = new HighScore();
     hs.initialise();
@@ -118,6 +120,7 @@ class Controller {
     this.sLEFT = false;
     this.sRIGHT = false;
     this.sDOWN = false;
+    this.sENTER = false;
     this.gameOver = false;
     this.hs = new HighScore();
     hs.initialise();
@@ -199,7 +202,23 @@ class Controller {
   public void setSRIGHT(boolean state) {
     this.sRIGHT = state;
   }
-
+  
+  /**
+   * Function: setENTER()
+   * 
+   * @param state boolean - state to set variable to.
+   *
+   * @return void
+   *
+   * desc: Sets sENTER variable to desired state.
+   *
+   * calls: Nil
+   *
+   * Affects: sENTER
+   */
+  public void setENTER(boolean state) {
+    this.sENTER = state;
+  }
 
   // Other Methods
 
@@ -455,10 +474,17 @@ class Controller {
        textAlign(CENTER);
        text("GAME OVER", width / 2, height + 50 / 2 - textWidth("GAME")); 
        checkHighScore(player.getScore());
-       gameOver = true;
+       //delay(1000);
+       waitForEnterPress();
      }
   }
 
+  private void waitForEnterPress(){
+
+   if(sENTER){
+     gameOver = true;
+   }
+  }
 
   /**
    * Function: drawHUD()
