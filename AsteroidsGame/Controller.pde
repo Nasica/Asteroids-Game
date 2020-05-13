@@ -13,6 +13,7 @@
 import processing.sound.*;
 SoundFile laser;
 SoundFile explosion;
+SoundFile engine;
 
 class Controller {
   private Player player;
@@ -239,6 +240,9 @@ class Controller {
 
     if (sUP && gameStarted) {
       this.player.accelerate(SHIP_ACCELERATION);
+      if(!engine.isPlaying()){
+        engine.play();
+      }
     }
 
     if (sRIGHT && gameStarted) {

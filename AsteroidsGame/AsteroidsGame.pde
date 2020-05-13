@@ -19,6 +19,7 @@ void setup(){
  controller = new Controller();
  laser = new SoundFile(this, "assets/sounds/Laser.mp3");
  explosion = new SoundFile(this, "assets/sounds/Explosion.mp3");
+ engine = new SoundFile(this, "assets/sounds/engine.wav");
  
 }
 
