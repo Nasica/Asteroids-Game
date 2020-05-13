@@ -9,7 +9,9 @@
 *  Date:     27 March 2020
 *
 */
-
+import processing.sound.*;
+SoundFile laser;
+SoundFile explosion;
 
 class Controller {
   private Player player;
@@ -21,14 +23,13 @@ class Controller {
   private final float SHIP_ROTATION = 3.5;
   private final int HUD_MARGIN = 20;
   private final int HUD_HEIGHT = 32;
-  private final int TEXT_SIZE = 20;
-  private PFont hudFont = createFont("Serif.plain", TEXT_SIZE, true);
   private ArrayList<Asteroid> asteroids;
   private Bullets[] bullets;
   private Shield shield;
   private MainMenu mainMenu = new MainMenu();
   private boolean gameStarted = false;
   private final int NEW_ASTEROIDS_ON_DEST = 3;
+
 
   // Constructors
 
@@ -51,7 +52,6 @@ class Controller {
     this.sRIGHT = false;
     this.sDOWN = false;
     this.bullets = new Bullets[0];
-    this.addNewAsteroids(1);
     //for (int i = 0; i < bullets.length; i++){
     //  bullets[i] = new Bullets(player.getLocation(), player.getBearing());
     //}
@@ -81,6 +81,7 @@ class Controller {
     //  bullets[i] = new Bullets(player.getLocation(), player.getBearing());
     //}
     shield = new Shield(player.getLocation(), player.getVelocity());
+    
   }  
 
 
@@ -212,24 +213,6 @@ class Controller {
     }
   }
 
-  /**
-   * Function: moveMenu()
-   * 
-   * @param Nil
-   *
-   * @return void
-   *
-   * desc: Moves the main menu selected item up and down
-   *
-   * calls: menuIndexUp()
-   *        menuIndexDown()
-   *        drawMainMenu()
-   *        sDOWN
-   *        sUP
-   *        gameStarted
-   *
-   * Affects: Nil
-   */
   public void moveMenu(){
     if (!gameStarted){
       if (sDOWN){
@@ -246,19 +229,6 @@ class Controller {
     }
   }
 
-  /**
-   * Function: menuIndexDown()
-   * 
-   * @param Nil
-   *
-   * @return void
-   *
-   * desc: Increments the selected menu item index
-   *
-   * calls: Menu.getMenuLenth()
-   *
-   * Affects: menuIndex
-   */
   private void menuIndexDown(){
     if (menuIndex == mainMenu.getMenuLength() - 1){
       menuIndex = 0;    
@@ -268,19 +238,6 @@ class Controller {
     
   }
 
-  /**
-   * Function: menuIndexUp()
-   * 
-   * @param Nil
-   *
-   * @return void
-   *
-   * desc: Decrements the selected menu item index
-   *
-   * calls: Menu.getMenuLenth()
-   *
-   * Affects: menuIndex
-   */
   private void menuIndexUp(){
     if (menuIndex == 0){
       menuIndex = mainMenu.getMenuLength() - 1;
@@ -289,19 +246,6 @@ class Controller {
     }
   }
   
-  /**
-   * Function: menuAction()
-   * 
-   * @param Nil
-   *
-   * @return void
-   *
-   * desc: Carrys out the required action when selecting a menu item 
-   *
-   * calls: menuIndex
-   *
-   * Affects: gameStarted
-   */
   public void menuAction(){
     switch(menuIndex){
       
@@ -309,29 +253,17 @@ class Controller {
       case 0:
         gameStarted = true;
         break;
-      //Quit
+      //High Scores
       case 1:
+        break;
+      //Quit
+      case 2:
         exit();
         break;
       default:
     }
   }
   
-  /**
-   * Function: drawMainMenu()
-   * 
-   * @param Nil
-   *
-   * @return void
-   *
-   * desc: Draws the Main Menu to the screen 
-   *
-   * calls: Menu.getMenuLength()
-   *        Menu.getMenuItems()
-   *        gameStarted
-   *
-   * Affects: gameStarted
-   */
   public void drawMainMenu(){
     if(!gameStarted){
       int textSize = 20;
@@ -349,19 +281,6 @@ class Controller {
     }
   }
   
-  /**
-   * Function: getGameState()
-   * 
-   * @param nil
-   *
-   * @return boolean
-   *
-   * desc: Returns if the game has started
-   *
-   * calls: nil 
-   *
-   * Affects: nil 
-   */
   public boolean getGameState(){
     return(this.gameStarted); 
   }
@@ -415,6 +334,7 @@ class Controller {
         player.die(int(explosionFrame/10) * 192, player.getLocation());
         this.explosionFrame++;
         newShield();
+        
       }
       
       else {
@@ -422,6 +342,9 @@ class Controller {
         player.updateLives(-1);
           if(player.getLives() > 0){
             player = new Player(player.getLives(), player.getScore());
+            for (int i =0; i<shield.shieldDest.length; i++){
+              shield.shieldDest[i] = 0;
+            }
           }
       
           else{
@@ -431,9 +354,7 @@ class Controller {
       }
       
      else{
-       textAlign(CENTER);
-       text("GAME OVER", width / 2, height + 50 / 2 - textWidth("GAME")); 
-       gameStarted = false;
+      text("GAME OVER", width / 2, height / 2 - textWidth("GAME")); 
      }
   }
 
@@ -452,8 +373,6 @@ class Controller {
    * Affects: Display
    */
   public void drawHUD() {
-    textAlign(LEFT);
-    textFont(hudFont);
     text("Lives:", HUD_MARGIN, HUD_HEIGHT);
 
     for (int i = 0; i < player.getLives(); i++) {
@@ -462,6 +381,8 @@ class Controller {
 
     text("Score: " + player.getScore(), width - HUD_MARGIN - textWidth("Score: XXXXX"), HUD_HEIGHT);
   }
+
+  //Scott's New code below
 
   /**
    * Function: randomPointOnCirc()
@@ -645,15 +566,25 @@ class Controller {
       Asteroid currentAsteroid = asteroids.get(i);
       for (int j=0; j < bullets.length; j++){
         Bullets currentBullet = bullets[j];
-        if (collider.detectCollision(currentAsteroid, currentBullet.getLocation()) && bullets[j].getActive()){
-          asteroidShot(i, true);  
+        if (collider.detectCollision(currentAsteroid, currentBullet.getLocation())){
+          asteroidShot(i);
           bullets[j].setActive(false);
+          explosion.play();  
         }
       }
       if (collider.detectCollision(currentAsteroid, player.getBoundingBox())) {
-        //asteroids.remove(i);
-        asteroidShot(i, false);
+        asteroids.remove(i);
         player.setAlive(false);
+        explosion.play();  
+      }
+      for (int k = 0; k < 4; k++){
+          if (collider.detectCollision(currentAsteroid, shield.sx[k], shield.sy[k])){
+            if (shield.shieldDest[k] == 0){
+              asteroidShot(i);
+              shield.shieldDest[k] = 1;
+              explosion.play();  
+          }
+        }
       }
     }
   }
@@ -676,6 +607,7 @@ class Controller {
     if (gameStarted){
       Bullets bullet = new Bullets(player.getLocation(), player.getBearing());
       bullets = (Bullets[]) append(bullets, bullet);
+      laser.play();
     }
   }
   
@@ -722,16 +654,14 @@ class Controller {
   * Affects: ArrayList<Asteroid> asteroids
   *          int NEW_ASTEROIDS_ON_DEST
   */  
-  public void asteroidShot(int asteroidIndex, boolean byWeapon){
+  public void asteroidShot(int asteroidIndex){
     Asteroid asteroid = asteroids.get(asteroidIndex);
-    asteroids.remove(asteroidIndex);
-    if(byWeapon) {
-      player.addScore(asteroid.getPointsValue());
-    }
     if (asteroid.getSize() > 1){
       PVector destroyLocation = asteroid.getLocation();
       addNewAsteroids(NEW_ASTEROIDS_ON_DEST, destroyLocation, asteroid.getSize() - 1);
     }
+    asteroids.remove(asteroidIndex);
+    
   }
   
   /**
@@ -780,10 +710,6 @@ class Controller {
       for (int s = 0; s <shield.shieldDest.length; s++){
         shield.shieldDest[s] = 1;
       } 
-    }else{
-      for (int s = 0; s <shield.shieldDest.length; s++){
-        shield.shieldDest[s] = 0;
-      }
     }
   }
   
@@ -804,9 +730,6 @@ class Controller {
   public void updateShield(){
     shield.shieldPopulate(player.getLocation());
     shield.drawShield();
-    for(int i = 0; i<shield.circle.length; i++){
-      shape(shield.circle[i]);
-    }
- }  
+  }
   
 }

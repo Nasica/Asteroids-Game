@@ -83,14 +83,9 @@ class Shield {
   * Affects: Nil
   */        
   void drawShield(){
-//  fill(#02f04a);
-//  stroke(#db0404);
   for (int s = 0; s<shieldDest.length; s++){
     if (shieldDest[s] == 0){
-       circle[s] = createShape(ELLIPSE, sx[s], sy[s], initialShieldRad, initialShieldRad);
-       circle[s].setStroke(#db0404);
-       circle[s].setFill(#02f04a);
-       circle[s].endShape();
+       ellipse(sx[s], sy[s], initialShieldRad, initialShieldRad);
    }
   }
   }

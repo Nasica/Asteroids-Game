@@ -17,7 +17,9 @@ void setup(){
  size(800,800);
  textSize(15);
  controller = new Controller();
- 
+ controller.addNewAsteroids(1);
+ laser = new SoundFile(this, "Laser.mp3");
+ explosion = new SoundFile(this, "Explosion.mp3");
 }
 
 void draw(){
@@ -52,6 +54,7 @@ void keyPressed() {
   }
   if (key == ' ') {
     controller.createBullet();
+    
   }
   if (key == ENTER) {
      controller.menuAction(); 
