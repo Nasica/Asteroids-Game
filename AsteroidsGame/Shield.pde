@@ -82,7 +82,7 @@ class Shield {
   * Affects: Nil
   */        
   void drawShield(){
-//  fill(#02f04a);
+    fill(#02f04a);
 //  stroke(#db0404);
     for (int s = 0; s < shieldDest.length; s++){    
       if (shieldDest[s] == 0){     
