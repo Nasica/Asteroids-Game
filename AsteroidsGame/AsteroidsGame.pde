@@ -27,7 +27,9 @@ void draw(){
  controller.drawAllAsteroids();
  controller.updateShip(); 
  controller.moveShip();
- controller.checkForCollisions();
+ controller.checkCollisionsVsBullets();
+ controller.checkCollisionsVsPlayer();
+ controller.checkCollisionsVsShield();
  controller.updateBullets();
  controller.updateShield();
  controller.drawHUD();

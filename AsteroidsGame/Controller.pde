@@ -1,14 +1,14 @@
 /**
-*  Controller class.
-*  
-*  @author Luke Dart, Scott Dimmock, Mark Gatus
-*  @version 0.1
-*  @since 3 May 2020 (Scott Dimmock)
-*  
-*  Filename: Controller.pde
-*  Date:     27 March 2020
-*
-*/
+ *  Controller class.
+ *  
+ *  @author Luke Dart, Scott Dimmock, Mark Gatus
+ *  @version 0.1
+ *  @since 3 May 2020 (Scott Dimmock)
+ *  
+ *  Filename: Controller.pde
+ *  Date:     27 March 2020
+ *
+ */
 
 import processing.sound.*;
 SoundFile laser;
@@ -32,6 +32,8 @@ class Controller {
   private MainMenu mainMenu = new MainMenu();
   private boolean gameStarted = false;
   private boolean gameOver;
+  private boolean waitingForEnter = false;
+  private boolean canCollide = false;
   private final int NEW_ASTEROIDS_ON_DEST = 3;
   private HighScore hs;
   private int playerLevel;
@@ -112,7 +114,7 @@ class Controller {
    * Desc: Constructor with lives and score parameters, creates a new Player object with specified score and number of lives 
    * and itialises userInput booleans to false.
    */
-  Controller(int lives, int score){
+  Controller(int lives, int score) {
     player = new Player(lives, score);
     asteroids = new ArrayList<Asteroid>();
     this.explosionFrame = 0;
@@ -202,7 +204,7 @@ class Controller {
   public void setSRIGHT(boolean state) {
     this.sRIGHT = state;
   }
-  
+
   /**
    * Function: setENTER()
    * 
@@ -268,16 +270,16 @@ class Controller {
    *
    * Affects: Nil
    */
-  public void moveMenu(){
-    if (!gameStarted){
-      if (sDOWN){
-      //menu options go down
+  public void moveMenu() {
+    if (!gameStarted) {
+      if (sDOWN) {
+        //menu options go down
         menuIndexDown();
         this.drawMainMenu();
       }
 
-      if (sUP){
-      //menu options go up
+      if (sUP) {
+        //menu options go up
         menuIndexUp();
         this.drawMainMenu();
       }
@@ -297,13 +299,12 @@ class Controller {
    *
    * Affects: menuIndex
    */
-  private void menuIndexDown(){
-    if (menuIndex == mainMenu.getMenuLength() - 1){
-      menuIndex = 0;    
+  private void menuIndexDown() {
+    if (menuIndex == mainMenu.getMenuLength() - 1) {
+      menuIndex = 0;
     } else {
       menuIndex++;
     }
-    
   }
 
   /**
@@ -319,14 +320,14 @@ class Controller {
    *
    * Affects: menuIndex
    */
-  private void menuIndexUp(){
-    if (menuIndex == 0){
+  private void menuIndexUp() {
+    if (menuIndex == 0) {
       menuIndex = mainMenu.getMenuLength() - 1;
     } else {
       menuIndex--;
     }
   }
-  
+
   /**
    * Function: menuAction()
    * 
@@ -340,21 +341,21 @@ class Controller {
    *
    * Affects: gameStarted
    */
-  public void menuAction(){
-    switch(menuIndex){
-      
+  public void menuAction() {
+    switch(menuIndex) {
+
       //Start Game
-      case 0:
-        gameStarted = true;
-        break;
+    case 0:
+      gameStarted = true;
+      break;
       //Quit
-      case 1:
-        exit();
-        break;
-      default:
+    case 1:
+      exit();
+      break;
+    default:
     }
   }
-  
+
   /**
    * Function: drawMainMenu()
    * 
@@ -370,23 +371,23 @@ class Controller {
    *
    * Affects: gameStarted
    */
-  public void drawMainMenu(){
-    if(!gameStarted){
+  public void drawMainMenu() {
+    if (!gameStarted) {
       int textSize = 20;
       float textOffset = 40;
       boolean boldText = false;
       float textYPos = (height/2) - (((mainMenu.getMenuLength() * textSize) + (mainMenu.getMenuLength() - 1) * textOffset)/2);
-      for (int i = 0; i < mainMenu.getMenuLength(); i++){
-        if (menuIndex == i){
+      for (int i = 0; i < mainMenu.getMenuLength(); i++) {
+        if (menuIndex == i) {
           boldText = true;
         }
         mainMenu.drawMenuItem(mainMenu.getMenuItems(i), width/2, textYPos + textOffset, boldText);
         textYPos += textOffset;
-        boldText = false;        
+        boldText = false;
       }
     }
   }
-  
+
   /**
    * Function: getGameState()
    * 
@@ -400,8 +401,8 @@ class Controller {
    *
    * Affects: nil 
    */
-  public boolean getGameState(){
-    return(this.gameStarted); 
+  public boolean getGameState() {
+    return(this.gameStarted);
   }
 
   /**
@@ -435,6 +436,7 @@ class Controller {
    */
   public void updateShip() {
     if (player.getAlive()) {
+      canCollide = true;
       player.setLocation(player.getLocation().add(player.getVelocity()));
       player.edgeDetection();
       pushMatrix();
@@ -445,38 +447,33 @@ class Controller {
       popMatrix();
       popMatrix();
       player.decelerate();
-    } 
-    
-    else if(player.getLives() > 0) {
+    } else if (player.getLives() > 0) {
+      canCollide = false;
       if (this.explosionFrame < 130) {
         player.die(int(explosionFrame/10) * 192, player.getLocation());
         this.explosionFrame++;
         this.bullets = new Bullets[0];
         newShield();
-      }
-      
-      else {
+      } else {
         this.explosionFrame = 0;
         player.updateLives(-1);
-          if(player.getLives() > 0){
-            player = new Player(player.getLives(), player.getScore());
-            this.bullets = new Bullets[0];
-            newShield();
-          }
-      
-          else{
-            player.setAlive(false);
-          }
-        }  
+        if (player.getLives() > 0) {
+          player = new Player(player.getLives(), player.getScore());
+          this.bullets = new Bullets[0];
+          newShield();
+        } else {
+          player.setAlive(false);
+        }
       }
-      
-     else{
-       textAlign(CENTER);
-       text("GAME OVER", width / 2, height + 50 / 2 - textWidth("GAME")); 
-       checkHighScore(player.getScore());
-       //delay(1000);
-       waitForEnterPress();
-     }
+    } else {
+      canCollide = false;
+      textAlign(CENTER);
+      text("GAME OVER", width / 2, height + 50 / 2 - textWidth("GAME")); 
+      checkHighScore(player.getScore());
+      waitingForEnter = true;
+      //delay(1000);
+      waitForEnterPress();
+    }
   }
 
   /**
@@ -492,10 +489,10 @@ class Controller {
    *
    * Affects: sENTER
    */
-  private void waitForEnterPress(){
-   if(sENTER){
-     gameOver = true;
-   }
+  private void waitForEnterPress() {
+    if (sENTER) {
+      gameOver = true;
+    }
   }
 
   /**
@@ -512,6 +509,7 @@ class Controller {
    * Affects: Display
    */
   public void drawHUD() {
+    fill(245,160,60);
     textAlign(LEFT);
     textFont(hudFont);
     text("Lives:", HUD_MARGIN, HUD_HEIGHT);
@@ -550,7 +548,7 @@ class Controller {
 
     return(new PVector(xPoint, yPoint));
   }
-  
+
   /**
    * Function: randomVelocity()
    *
@@ -588,12 +586,12 @@ class Controller {
   private int randomDir() {
     return(-1 + (int)random(2) * 2);
   }
-  
-  private void checkHighScore(int score){
-   if (hs.isHighest(score)){
-     hs.setScore(score);
-     hs.store();
-   }
+
+  private void checkHighScore(int score) {
+    if (hs.isHighest(score)) {
+      hs.setScore(score);
+      hs.store();
+    }
   }
 
   /**
@@ -616,24 +614,24 @@ class Controller {
     newAsteroid.setVelocity(randomVelocity(newAsteroid.MIN_SPEED, newAsteroid.MAX_SPEED));
     return(newAsteroid);
   }
-  
+
   /**
-  * Function: addNewAsteroids()
-  *
-  * @param nil
-  *
-  * @return int
-  *
-  * Desc: Adds a single asteroid to the asteroids ArrayList.
-  *
-  * Calls: generateAsteroid()
-  *
-  * Affects: ArrayList<Asteroid> asteroids
-  */
-  public void addNewAsteroids(){
+   * Function: addNewAsteroids()
+   *
+   * @param nil
+   *
+   * @return int
+   *
+   * Desc: Adds a single asteroid to the asteroids ArrayList.
+   *
+   * Calls: generateAsteroid()
+   *
+   * Affects: ArrayList<Asteroid> asteroids
+   */
+  public void addNewAsteroids() {
     asteroids.add(generateAsteroid());
   }
-  
+
   /**
    * Function: addNewAsteroids()
    *
@@ -655,8 +653,8 @@ class Controller {
 
 
 
-  
-  
+
+
   /**
    * Function: drawAllAsteroids()
    *
@@ -678,7 +676,7 @@ class Controller {
    * Affects: ArrayList<Asteroid> asteroids
    */
   public void drawAllAsteroids() {
-    if (gameStarted){
+    if (gameStarted) {
       for (int i = 0; i < asteroids.size(); i++) {
         Asteroid currentAsteroid = asteroids.get(i);
         currentAsteroid.updatePosition();
@@ -694,260 +692,316 @@ class Controller {
   }
 
   /**
-   * Function: checkForCollisions()
-   *
-   * @param Nil
-   *
-   * @return void
-   *
-   * Desc: Calls the CollisionDetect.detectCollision() method on each asteroid in the asteroids ArrayList
-   *       against the player object
-   *
-   * Calls: CollisionDetect.detectCollision()
-   *        Player.getBoundingBox
-   *        ArrayList<Asteroid>.get()
-   *        ArrayList<Asteroid>.size()
-   *
-   * Affects: ArrayList<Asteroid> asteroids
-   */
-  private void checkForCollisions() {
-    for (int i = 0; i < asteroids.size(); i++) {
-      Asteroid currentAsteroid = asteroids.get(i);
-      for (int j=0; j < bullets.length; j++){
-        Bullets currentBullet = bullets[j];
-        if (collider.detectCollision(currentAsteroid, currentBullet.getLocation()) && bullets[j].getActive()){
-          asteroidShot(i, true);
-          bullets[j].setActive(false);
-          explosion.play();
-        }
-      }
-      if (collider.detectCollision(currentAsteroid, player.getBoundingBox())) {
-        //asteroids.remove(i);
-        asteroidShot(i, false);
-        explosion.play();
-        player.setAlive(false);
-      }
-      for (int k = 0; k < 4; k++){
-        if (collider.detectCollision(currentAsteroid, new PVector(shield.sx[k], shield.sy[k]))){
-          if (shield.shieldDest[k] == 0) {
-             asteroidShot(i, true);
-             explosion.play();
-             shield.shieldDest[k] = 1;
+  * Function: checkCollisionsVsBullets()
+  *
+  * @param Nil
+  *
+  * @return void
+  *
+  * Desc: Calls the CollisionDetect.detectCollision() method on each asteroid in the asteroids ArrayList
+  *       against the bullet objects
+  *
+  * Calls: CollisionDetect.detectCollision()
+  *        explosion.play()
+  *        Bullets.getActive()
+  *        Bullets.setActive()
+  *        ArrayList<Asteroid>.get()
+  *        ArrayList<Asteroid>.size()
+  *
+  * Affects: ArrayList<Asteroid> asteroids
+  *          bullets[] bullet
+  */
+  public void checkCollisionsVsBullets() {
+    if(canCollide){
+      for (int i = 0; i < asteroids.size(); i++) {
+        Asteroid currentAsteroid = asteroids.get(i);
+        for (int j=0; j < bullets.length; j++) {
+          Bullets currentBullet = bullets[j];
+          if (collider.detectCollision(currentAsteroid, currentBullet.getLocation()) && bullets[j].getActive()) {
+            asteroidShot(i, true);
+            bullets[j].setActive(false);
+            explosion.play();
           }
         }
       }
     }
   }
-  
+
   /**
-  * Function: createBullet()
+  * Function: checkCollisionsVsPlayer()
   *
   * @param Nil
   *
   * @return void
   *
-  * Desc: Generates a bullet instance within a bullet class object array
+  * Desc: Calls the CollisionDetect.detectCollision() method on each asteroid in the asteroids ArrayList
+  *       against the player object
   *
-  * Calls: player.getLocation()
-  *        player.getBearing()
+  * Calls: CollisionDetect.detectCollision()
+  *        explosion.play()
+  *        Player.setAlive()
+  *        Player.getBoundingBox()
+  *        ArrayList<Asteroid>.get()
+  *        ArrayList<Asteroid>.size()
   *
-  * Affects: Bullets objects array
+  * Affects: ArrayList<Asteroid> asteroids
+  *          Player player
   */
-  public void createBullet(){
-    if (gameStarted){
+  public void checkCollisionsVsPlayer() {
+    if (canCollide) {
+      for (int i = 0; i < asteroids.size(); i++) {
+        Asteroid currentAsteroid = asteroids.get(i);
+        if (collider.detectCollision(currentAsteroid, player.getBoundingBox())) {
+          //asteroids.remove(i);
+          asteroidShot(i, false);
+          explosion.play();
+          player.setAlive(false);
+        }
+      }
+    }
+  }
+  
+  /**
+  * Function: checkCollisionsVsShield()
+  *
+  * @param Nil
+  *
+  * @return void
+  *
+  * Desc: Calls the CollisionDetect.detectCollision() method on each asteroid in the asteroids ArrayList
+  *       against the shield objects
+  *
+  * Calls: CollisionDetect.detectCollision()
+  *        explosion.play()
+  *        ArrayList<Asteroid>.get()
+  *        ArrayList<Asteroid>.size()
+  *
+  * Affects: ArrayList<Asteroid> asteroids
+  *          Shield shield
+  */
+  public void checkCollisionsVsShield() {
+    if (canCollide) {
+      for (int i = 0; i < asteroids.size(); i++) {
+        Asteroid currentAsteroid = asteroids.get(i);
+        for (int j = 0; j < 4; j++) {
+          if (collider.detectCollision(currentAsteroid, new PVector(shield.sx[j], shield.sy[j])) && shield.shieldDest[j] == 0){ 
+            asteroidShot(i, true);
+            explosion.play();
+            shield.shieldDest[j] = 1;
+          }
+        }
+      }      
+    }
+  }
+
+  /**
+   * Function: createBullet()
+   *
+   * @param Nil
+   *
+   * @return void
+   *
+   * Desc: Generates a bullet instance within a bullet class object array
+   *
+   * Calls: player.getLocation()
+   *        player.getBearing()
+   *
+   * Affects: Bullets objects array
+   */
+  public void createBullet() {
+    if (gameStarted && ! waitingForEnter) {
       Bullets bullet = new Bullets(player.getLocation(), player.getBearing());
       laser.play();
       bullets = (Bullets[]) append(bullets, bullet);
     }
   }
-  
+
   /**
-  * Function: updateBullets()
-  *
-  * @param Nil
-  *
-  * @return void
-  *
-  * Desc: Updates the position of the bullet and draws bullets to canvas
-  *
-  * Calls: bullets[].drawBullets()
-  *        bullets[].updateBullets()
-  *        bullets[].checkEdges()
-  *
-  * Affects: Bullets objects array
-  */
-  public void updateBullets(){
-    for (int i = 0; i<bullets.length; i++){
-      if(bullets[i].getActive()){
+   * Function: updateBullets()
+   *
+   * @param Nil
+   *
+   * @return void
+   *
+   * Desc: Updates the position of the bullet and draws bullets to canvas
+   *
+   * Calls: bullets[].drawBullets()
+   *        bullets[].updateBullets()
+   *        bullets[].checkEdges()
+   *
+   * Affects: Bullets objects array
+   */
+  public void updateBullets() {
+    for (int i = 0; i<bullets.length; i++) {
+      if (bullets[i].getActive()) {
         bullets[i].drawBullets();
         bullets[i].updateBullets();
         bullets[i].checkEdges();
       }
     }
   }
-  
+
   /**
-  * Function: checkNewLevel()
-  *
-  * @param Nil
-  *
-  * @return void
-  *
-  * Desc: Checks for when no asteroids exist in order to start the next level
-  *
-  * Calls: calcAsteroidsToGenerate()
-  *        addNewAsteroids()
-  *
-  * Affects: playerLevel
-  */
-  public void checkNewLevel(){
-    if (asteroids.size() == 0){
+   * Function: checkNewLevel()
+   *
+   * @param Nil
+   *
+   * @return void
+   *
+   * Desc: Checks for when no asteroids exist in order to start the next level
+   *
+   * Calls: calcAsteroidsToGenerate()
+   *        addNewAsteroids()
+   *
+   * Affects: playerLevel
+   */
+  public void checkNewLevel() {
+    if (asteroids.size() == 0) {
       playerLevel++;
       calcAsteroidsToGenerate();
       this.addNewAsteroids(asteroidsToGenerate);
     }
   }
-  
+
   /**
-  * Function: calcAsteroidsToGenerate()
-  *
-  * @param Nil
-  *
-  * @return void
-  *
-  * Desc: Calculates the number of asteroids to generate based on the player level
-  *       with 1 new asteroid added at each 3rd level.
-  *
-  * Calls: 
-  *
-  * Affects: asteroidsToGenerate
-  */
-  private void calcAsteroidsToGenerate(){
-    if ((playerLevel % 3) == 0){
-      asteroidsToGenerate++; 
+   * Function: calcAsteroidsToGenerate()
+   *
+   * @param Nil
+   *
+   * @return void
+   *
+   * Desc: Calculates the number of asteroids to generate based on the player level
+   *       with 1 new asteroid added at each 3rd level.
+   *
+   * Calls: 
+   *
+   * Affects: asteroidsToGenerate
+   */
+  private void calcAsteroidsToGenerate() {
+    if ((playerLevel % 3) == 0) {
+      asteroidsToGenerate++;
     }
   }
 
   /**
-  * Function: asteroidShot()
-  *
-  * @param asteroidIndex Int    The index of the asteroid within ArrayList asteroids that was shot
-  *
-  * @return void
-  *
-  * Desc: Destroys the asteroid that has been shot and if it is not at the smallest size replaces it
-  *       with NEW_ASTEROIDS_ON_DEST asteroids
-  *
-  * Calls: Asteroid.getSize()
-  *        Asteroid.getLocation()
-  *        ArrayList<Asteroid>.get()
-  *        ArrayList<Asteroid>.remove()
-  *
-  * Affects: ArrayList<Asteroid> asteroids
-  *          int NEW_ASTEROIDS_ON_DEST
-  */  
-  public void asteroidShot(int asteroidIndex, boolean byWeapon){
+   * Function: asteroidShot()
+   *
+   * @param asteroidIndex Int    The index of the asteroid within ArrayList asteroids that was shot
+   *
+   * @return void
+   *
+   * Desc: Destroys the asteroid that has been shot and if it is not at the smallest size replaces it
+   *       with NEW_ASTEROIDS_ON_DEST asteroids
+   *
+   * Calls: Asteroid.getSize()
+   *        Asteroid.getLocation()
+   *        ArrayList<Asteroid>.get()
+   *        ArrayList<Asteroid>.remove()
+   *
+   * Affects: ArrayList<Asteroid> asteroids
+   *          int NEW_ASTEROIDS_ON_DEST
+   */
+  public void asteroidShot(int asteroidIndex, boolean byWeapon) {
     Asteroid asteroid = asteroids.get(asteroidIndex);
     asteroids.remove(asteroidIndex);
-    if(byWeapon) {
+    if (byWeapon) {
       player.addScore(asteroid.getPointsValue());
     }
-    if (asteroid.getSize() > 1){
+    if (asteroid.getSize() > 1) {
       PVector destroyLocation = asteroid.getLocation();
       addNewAsteroids(NEW_ASTEROIDS_ON_DEST, destroyLocation, asteroid.getSize() - 1);
     }
   }
-  
+
   /**
-  * Function: addNewAsteroids()
-  *
-  * @param numberOfAsteroids int    The number of asteroids to add
-  *
-  * @return int
-  *
-  * Desc: Adds a given number of asteroids to the asteroids ArrayList.
-  *
-  * Calls: generateAsteroid()
-  *
-  * Affects: ArrayList<Asteroid> asteroids
-  */
-  public void addNewAsteroids(int numberOfAsteroids, PVector location, int size){
-    for (int i = 0; i < numberOfAsteroids; i++){
+   * Function: addNewAsteroids()
+   *
+   * @param numberOfAsteroids int    The number of asteroids to add
+   *
+   * @return int
+   *
+   * Desc: Adds a given number of asteroids to the asteroids ArrayList.
+   *
+   * Calls: generateAsteroid()
+   *
+   * Affects: ArrayList<Asteroid> asteroids
+   */
+  public void addNewAsteroids(int numberOfAsteroids, PVector location, int size) {
+    for (int i = 0; i < numberOfAsteroids; i++) {
       asteroids.add(generateAsteroid(size, location));
     }
   }
-  
+
   /**
-  * Function: generateAsteroid()
-  *
-  * @param size int     The size of the asteroid to create.
-  * @param location PVector   The location to generate the asteroid in.
-  *
-  * @return Asteroid
-  *
-  * Desc: Returns a single Asteroid object with a specified position and 
-  *       a random velocity.
-  *
-  * Calls: randomVelocity()
-  *        
-  *
-  * Affects: Nil
-  */
-  private Asteroid generateAsteroid(int size, PVector location){
+   * Function: generateAsteroid()
+   *
+   * @param size int     The size of the asteroid to create.
+   * @param location PVector   The location to generate the asteroid in.
+   *
+   * @return Asteroid
+   *
+   * Desc: Returns a single Asteroid object with a specified position and 
+   *       a random velocity.
+   *
+   * Calls: randomVelocity()
+   *        
+   *
+   * Affects: Nil
+   */
+  private Asteroid generateAsteroid(int size, PVector location) {
     Asteroid newAsteroid = new Asteroid(size, location);
     newAsteroid.setVelocity(randomVelocity(newAsteroid.MIN_SPEED, newAsteroid.MAX_SPEED));
     return(newAsteroid);
   }
-  
-  public void newShield(){
-     if (player.alive == false){
-      for (int s = 0; s <shield.shieldDest.length; s++){
+
+  public void newShield() {
+    if (player.alive == false) {
+      for (int s = 0; s <shield.shieldDest.length; s++) {
         shield.shieldDest[s] = 1;
-      } 
-    }else{
-      for (int s = 0; s <shield.shieldDest.length; s++){
+      }
+    } else {
+      for (int s = 0; s <shield.shieldDest.length; s++) {
         shield.shieldDest[s] = 0;
       }
     }
   }
-  
+
   /**
-  * Function: updateShield()
-  *
-  * @param Nil
-  *
-  * @return void
-  *
-  * Desc: Populates shield class and draws position of shield to canvas
-  *
-  * Calls: shield.shieldPopulate()
-  *        shield.drawShield()
-  *
-  * Affects: Shield object
-  */  
-  public void updateShield(){
+   * Function: updateShield()
+   *
+   * @param Nil
+   *
+   * @return void
+   *
+   * Desc: Populates shield class and draws position of shield to canvas
+   *
+   * Calls: shield.shieldPopulate()
+   *        shield.drawShield()
+   *
+   * Affects: Shield object
+   */
+  public void updateShield() {
     shield.shieldPopulate(player.getLocation());
     shield.drawShield();
     //for(int i = 0; i<shield.circle.length; i++){
     //  shape(shield.circle[i]);
     //}
- }  
- 
+  }  
+
   /**
-  * Function: getGameOver()
-  *
-  * @param Nil
-  *
-  * @return boolean
-  *
-  * Desc: Returns the state of the gameOver boolean.
-  *
-  * Calls: nil
-  *
-  * Affects: nil
-  */  
- public boolean getGameOver(){
+   * Function: getGameOver()
+   *
+   * @param Nil
+   *
+   * @return boolean
+   *
+   * Desc: Returns the state of the gameOver boolean.
+   *
+   * Calls: nil
+   *
+   * Affects: nil
+   */
+  public boolean getGameOver() {
     return this.gameOver;
- }
-  
+  }
 }
