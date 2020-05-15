@@ -2,42 +2,39 @@
  *  Controller class.
  *  
  *  @author Luke Dart, Scott Dimmock, Mark Gatus
- *  @version 0.1
- *  @since 3 May 2020 (Scott Dimmock)
+ *  @version 1.0
+ *  @since 15 May 2020 (Normalised by Luke Dart)
  *  
  *  Filename: Controller.pde
  *  Date:     27 March 2020
  *
  */
 
-import processing.sound.*;
-SoundFile laser;
-SoundFile explosion;
 
 class Controller {
   private Player player;
   private CollisionDetect collider;
+  private Shield shield;
+  private HighScore hs;
+  private Bullets[] bullets;
+  private MainMenu mainMenu = new MainMenu();
   private int explosionFrame;
   private int menuIndex = 0;
-  private boolean sUP, sDOWN, sLEFT, sRIGHT, sENTER; 
+  private int playerLevel;
+  private int asteroidsToGenerate = 1;
+  private ArrayList<Asteroid> asteroids;
+  private boolean sUP, sDOWN, sLEFT, sRIGHT, sENTER;
+  private boolean gameStarted = false;
+  private boolean gameOver;
+  private boolean waitingForEnter = false;
+  private boolean canCollide = false;
   private final float SHIP_ACCELERATION = 0.1;
   private final float SHIP_ROTATION = 3.5;
   private final int HUD_MARGIN = 20;
   private final int HUD_HEIGHT = 32;
   private final int TEXT_SIZE = 20;
-  private PFont hudFont = createFont("Serif.plain", TEXT_SIZE, true);
-  private ArrayList<Asteroid> asteroids;
-  private Bullets[] bullets;
-  private Shield shield;
-  private MainMenu mainMenu = new MainMenu();
-  private boolean gameStarted = false;
-  private boolean gameOver;
-  private boolean waitingForEnter = false;
-  private boolean canCollide = false;
   private final int NEW_ASTEROIDS_ON_DEST = 3;
-  private HighScore hs;
-  private int playerLevel;
-  private int asteroidsToGenerate = 1;
+  private PFont hudFont = createFont("Serif.plain", TEXT_SIZE, true);
 
   // Constructors
 
@@ -46,13 +43,12 @@ class Controller {
    *
    * @param Nil
    *
-   * @return Controller
-   *
-   * Desc: Empty Constructor creates a new default Player object and itialises userInput booleans to false.
+   * Desc: Empty Constructor creates a new default Player object and 
+   *       itialises userInput booleans to false.
    */
   Controller() {
     this.player = new Player();
-    asteroids = new ArrayList<Asteroid>();
+    this.asteroids = new ArrayList<Asteroid>();
     this.collider = new CollisionDetect();
     this.explosionFrame = 0;
     this.sUP = false;
@@ -64,12 +60,9 @@ class Controller {
     this.addNewAsteroids(asteroidsToGenerate);
     this.gameOver = false;
     this.hs = new HighScore();
-    hs.initialise();
+    this.hs.initialise();
     this.playerLevel = 1;
-    //for (int i = 0; i < bullets.length; i++){
-    //  bullets[i] = new Bullets(player.getLocation(), player.getBearing());
-    //}
-    shield = new Shield(player.getLocation(), player.getVelocity());
+    this.shield = new Shield(player.getLocation(), player.getVelocity());
   }
 
 
@@ -78,14 +71,12 @@ class Controller {
    *
    * @param lives int - number of lives player has.
    *
-   * @return Controller
-   *
-   * Desc: Constructor with lives parameter, creates a new Player object with specified number of lives
-   * and itialises userInput booleans to false.
+   * Desc: Constructor with lives parameter, creates a new Player object with 
+   * specified number of lives and itialises userInput booleans to false.
    */
   Controller(int lives) {
-    player = new Player(lives);
-    asteroids = new ArrayList<Asteroid>();
+    this.player = new Player(lives);
+    this.asteroids = new ArrayList<Asteroid>();
     this.explosionFrame = 0;
     this.sUP = false;
     this.sLEFT = false;
@@ -94,12 +85,9 @@ class Controller {
     this.sENTER = false;
     this.gameOver = false;
     this.hs = new HighScore();
-    hs.initialise();
+    this.hs.initialise();
     this.playerLevel = 1;
-    //for (int i = 0; i < bullets.length; i++){
-    //  bullets[i] = new Bullets(player.getLocation(), player.getBearing());
-    //}
-    shield = new Shield(player.getLocation(), player.getVelocity());
+    this.shield = new Shield(player.getLocation(), player.getVelocity());
   }  
 
 
@@ -109,14 +97,13 @@ class Controller {
    * @param lives int - number of lives player has.
    * @param score int - Player score.
    *
-   * @return Controller
-   *
-   * Desc: Constructor with lives and score parameters, creates a new Player object with specified score and number of lives 
-   * and itialises userInput booleans to false.
+   * Desc: Constructor with lives and score parameters, creates a new Player 
+   *       object with specified score and number of lives and itialises 
+   *       userInput booleans to false.
    */
   Controller(int lives, int score) {
-    player = new Player(lives, score);
-    asteroids = new ArrayList<Asteroid>();
+    this.player = new Player(lives, score);
+    this.asteroids = new ArrayList<Asteroid>();
     this.explosionFrame = 0;
     this.sUP = false;
     this.sLEFT = false;
@@ -125,12 +112,9 @@ class Controller {
     this.sENTER = false;
     this.gameOver = false;
     this.hs = new HighScore();
-    hs.initialise();
+    this.hs.initialise();
     this.playerLevel = 1;
-    //for (int i = 0; i < bullets.length; i++){
-    //  bullets[i] = new Bullets(player.getLocation(), player.getBearing());
-    //}
-    shield = new Shield(player.getLocation(), player.getVelocity());
+    this.shield = new Shield(player.getLocation(), player.getVelocity());
   }
 
   // Mutators
@@ -164,11 +148,12 @@ class Controller {
    *
    * calls: Nil
    *
-   * Affects: sUP
+   * Affects: sDOWN
    */
   public void setSDOWN(boolean state) {
     this.sDOWN = state;
   }
+
 
   /**
    * Function: setSLEFT()
@@ -205,6 +190,7 @@ class Controller {
     this.sRIGHT = state;
   }
 
+
   /**
    * Function: setENTER()
    * 
@@ -238,7 +224,6 @@ class Controller {
    * Affects: sUP
    */
   public void moveShip() {
-
     if (sUP && gameStarted) {
       this.player.accelerate(SHIP_ACCELERATION);
     }
@@ -251,6 +236,7 @@ class Controller {
       this.player.rotateShip(-SHIP_ROTATION);
     }
   }
+
 
   /**
    * Function: moveMenu()
@@ -273,18 +259,17 @@ class Controller {
   public void moveMenu() {
     if (!gameStarted) {
       if (sDOWN) {
-        //menu options go down
         menuIndexDown();
         this.drawMainMenu();
       }
 
       if (sUP) {
-        //menu options go up
         menuIndexUp();
         this.drawMainMenu();
       }
     }
   }
+
 
   /**
    * Function: menuIndexDown()
@@ -307,6 +292,7 @@ class Controller {
     }
   }
 
+
   /**
    * Function: menuIndexUp()
    * 
@@ -328,6 +314,7 @@ class Controller {
     }
   }
 
+
   /**
    * Function: menuAction()
    * 
@@ -348,6 +335,7 @@ class Controller {
     case 0:
       gameStarted = true;
       break;
+
       //Quit
     case 1:
       exit();
@@ -355,6 +343,7 @@ class Controller {
     default:
     }
   }
+
 
   /**
    * Function: drawMainMenu()
@@ -376,34 +365,41 @@ class Controller {
       int textSize = 20;
       float textOffset = 40;
       boolean boldText = false;
-      float textYPos = (height/2) - (((mainMenu.getMenuLength() * textSize) + (mainMenu.getMenuLength() - 1) * textOffset)/2);
+      float textYPos = (height / 2) - (((mainMenu.getMenuLength() * textSize) 
+        + (mainMenu.getMenuLength() - 1) * textOffset) / 2);
+
       for (int i = 0; i < mainMenu.getMenuLength(); i++) {
         if (menuIndex == i) {
           boldText = true;
         }
-        mainMenu.drawMenuItem(mainMenu.getMenuItems(i), width/2, textYPos + textOffset, boldText);
+
+        mainMenu.drawMenuItem(mainMenu.getMenuItems(i), width / 2, textYPos 
+          + textOffset, boldText);
         textYPos += textOffset;
         boldText = false;
       }
     }
   }
 
+
   /**
    * Function: getGameState()
    * 
-   * @param nil
+   * @param Nil
    *
    * @return boolean
    *
    * desc: Returns if the game has started
    *
-   * calls: nil 
+   * calls: Nil 
    *
-   * Affects: nil 
+   * Affects: Nil 
    */
   public boolean getGameState() {
+
     return(this.gameStarted);
   }
+
 
   /**
    * Function: updateShip()
@@ -414,8 +410,10 @@ class Controller {
    *
    * Desc: Updates location based on velocity. 
    *       Checks edges of screen.
-   *       Pushes matrix transformations, translate to location and rotate by bearing. 
-   *       Draws flame offset on x axis by half image width and offset on y axis by flamePosition.
+   *       Pushes matrix transformations, translate to location and rotate by 
+   *       bearing. 
+   *       Draws flame offset on x axis by half image width and offset on y 
+   *       axis by flamePosition.
    *       Draws ship offset on x and y axis by half image width and height.
    *       Pop matrix transformations.
    *       Decelerates ship.
@@ -449,6 +447,7 @@ class Controller {
       player.decelerate();
     } else if (player.getLives() > 0) {
       canCollide = false;
+
       if (this.explosionFrame < 130) {
         player.die(int(explosionFrame/10) * 192, player.getLocation());
         this.explosionFrame++;
@@ -457,6 +456,7 @@ class Controller {
       } else {
         this.explosionFrame = 0;
         player.updateLives(-1);
+
         if (player.getLives() > 0) {
           player = new Player(player.getLives(), player.getScore());
           this.bullets = new Bullets[0];
@@ -471,10 +471,10 @@ class Controller {
       text("GAME OVER", width / 2, height + 50 / 2 - textWidth("GAME")); 
       checkHighScore(player.getScore());
       waitingForEnter = true;
-      //delay(1000);
       waitForEnterPress();
     }
   }
+
 
   /**
    * Function: waitForEnterPress()
@@ -483,7 +483,7 @@ class Controller {
    *
    * @return void
    *
-   * desc: Waits for the enter key to be pressed in order to restart the game
+   * desc: Waits for the enter key to be pressed in order to restart the game.
    *
    * calls: Nil
    *
@@ -494,6 +494,7 @@ class Controller {
       gameOver = true;
     }
   }
+
 
   /**
    * Function: drawHUD()
@@ -509,19 +510,22 @@ class Controller {
    * Affects: Display
    */
   public void drawHUD() {
-    fill(245,160,60);
+    fill(245, 160, 60);
     textAlign(LEFT);
     textFont(hudFont);
     text("Lives:", HUD_MARGIN, HUD_HEIGHT);
 
     for (int i = 0; i < player.getLives(); i++) {
-      player.drawShipIcon(int(HUD_MARGIN * i + textWidth("Lives:") * 2), HUD_MARGIN);
+      player.drawShipIcon(int(HUD_MARGIN * i + textWidth("Lives:") * 2), 
+        HUD_MARGIN);
     }
 
-    text("Score: " + player.getScore(), width - HUD_MARGIN - textWidth("Score: XXXXX"), HUD_HEIGHT);
+    text("Score: " + player.getScore(), width - HUD_MARGIN 
+      - textWidth("Score: XXXXX"), HUD_HEIGHT);
     textAlign(CENTER);
-    text("High Score: " + hs.getScore(), width/2, HUD_HEIGHT);
+    text("High Score: " + hs.getScore(), width / 2, HUD_HEIGHT);
   }
+
 
   /**
    * Function: randomPointOnCirc()
@@ -530,7 +534,8 @@ class Controller {
    *
    * @return PVector
    *
-   * Desc: produces a random point on a circle whose radius is the diagonal screen size
+   * Desc: produces a random point on a circle whose radius is the diagonal 
+   *       screen size.
    *
    * Calls: random()
    *        sqrt()
@@ -549,11 +554,12 @@ class Controller {
     return(new PVector(xPoint, yPoint));
   }
 
+
   /**
    * Function: randomVelocity()
    *
-   * @param minSpeed int    The minimum speed for the random range
-   * @param maxSpeed int    The maximum speed for the random range
+   * @param minSpeed int - The minimum speed for the random range
+   * @param maxSpeed int - The maximum speed for the random range
    *
    * @return PVector
    *
@@ -567,8 +573,10 @@ class Controller {
   private PVector randomVelocity(int minSpeed, int maxSpeed) {
     int xVel = (int)random(minSpeed, maxSpeed + 1) * randomDir();
     int yVel = (int)random(minSpeed, maxSpeed + 1) * randomDir();
+
     return(new PVector(xVel, yVel));
   }
+
 
   /**
    * Function: randomDir()
@@ -587,12 +595,30 @@ class Controller {
     return(-1 + (int)random(2) * 2);
   }
 
+
+  /**
+   * Function: checkHighScore()
+   *
+   * @param score int - Player score 
+   *
+   * @return void
+   *
+   * Desc: Checks if score is highest score yet and sets new high 
+   *       score if it is.
+   *
+   * Calls: isHighestScore()
+   *        setScore()
+   *        store()
+   *
+   * Affects: Nil
+   */
   private void checkHighScore(int score) {
-    if (hs.isHighest(score)) {
-      hs.setScore(score);
-      hs.store();
+    if (this.hs.isHighest(score)) {
+      this.hs.setScore(score);
+      this.hs.store();
     }
   }
+
 
   /**
    * Function: generateAsteroid()
@@ -601,7 +627,8 @@ class Controller {
    *
    * @return Asteroid
    *
-   * Desc: Returns a single Asteroid object with randomly generate position and velocity.
+   * Desc: Returns a single Asteroid object with randomly generate position 
+   *       and velocity.
    *
    * Calls: randomPointOnCirc()
    *        randomVelocity()
@@ -611,14 +638,17 @@ class Controller {
   private Asteroid generateAsteroid() {
     PVector initPosition = randomPointOnCirc();
     Asteroid newAsteroid = new Asteroid(3, initPosition);
-    newAsteroid.setVelocity(randomVelocity(newAsteroid.MIN_SPEED, newAsteroid.MAX_SPEED));
+    newAsteroid.setVelocity(randomVelocity(newAsteroid.MIN_SPEED, 
+      newAsteroid.MAX_SPEED));
+
     return(newAsteroid);
   }
+
 
   /**
    * Function: addNewAsteroids()
    *
-   * @param nil
+   * @param Nil
    *
    * @return int
    *
@@ -629,13 +659,14 @@ class Controller {
    * Affects: ArrayList<Asteroid> asteroids
    */
   public void addNewAsteroids() {
-    asteroids.add(generateAsteroid());
+    this.asteroids.add(generateAsteroid());
   }
+
 
   /**
    * Function: addNewAsteroids()
    *
-   * @param numberOfAsteroids int    The number of asteroids to add
+   * @param numberOfAsteroids int - The number of asteroids to add
    *
    * @return int
    *
@@ -647,12 +678,9 @@ class Controller {
    */
   public void addNewAsteroids(int numberOfAsteroids) {
     for (int i = 0; i < numberOfAsteroids; i++) {
-      asteroids.add(generateAsteroid());
+      this.asteroids.add(generateAsteroid());
     }
   }
-
-
-
 
 
   /**
@@ -680,119 +708,135 @@ class Controller {
       for (int i = 0; i < asteroids.size(); i++) {
         Asteroid currentAsteroid = asteroids.get(i);
         currentAsteroid.updatePosition();
-        if (currentAsteroid.getLocation().x > width || currentAsteroid.getLocation().x < -currentAsteroid.getImageSize().x) {
+
+        if (currentAsteroid.getLocation().x > width 
+          || currentAsteroid.getLocation().x 
+          < -currentAsteroid.getImageSize().x) {
           currentAsteroid.wrapXAxis();
         }
-        if (currentAsteroid.getLocation().y > height || currentAsteroid.getLocation().y < -currentAsteroid.getImageSize().y) {
+
+        if (currentAsteroid.getLocation().y > height 
+          || currentAsteroid.getLocation().y 
+          < -currentAsteroid.getImageSize().y) {
           currentAsteroid.wrapYAxis();
         }
+
         currentAsteroid.drawAsteroid();
       }
     }
   }
 
+
   /**
-  * Function: checkCollisionsVsBullets()
-  *
-  * @param Nil
-  *
-  * @return void
-  *
-  * Desc: Calls the CollisionDetect.detectCollision() method on each asteroid in the asteroids ArrayList
-  *       against the bullet objects
-  *
-  * Calls: CollisionDetect.detectCollision()
-  *        explosion.play()
-  *        Bullets.getActive()
-  *        Bullets.setActive()
-  *        ArrayList<Asteroid>.get()
-  *        ArrayList<Asteroid>.size()
-  *
-  * Affects: ArrayList<Asteroid> asteroids
-  *          bullets[] bullet
-  */
+   * Function: checkCollisionsVsBullets()
+   *
+   * @param Nil
+   *
+   * @return void
+   *
+   * Desc: Calls the CollisionDetect.detectCollision() method on each asteroid 
+   *       in the asteroids ArrayListcagainst the bullet objects.
+   *
+   * Calls: CollisionDetect.detectCollision()
+   *        explosion.play()
+   *        Bullets.getActive()
+   *        Bullets.setActive()
+   *        ArrayList<Asteroid>.get()
+   *        ArrayList<Asteroid>.size()
+   *
+   * Affects: ArrayList<Asteroid> asteroids
+   *          bullets[] bullet
+   */
   public void checkCollisionsVsBullets() {
-    if(canCollide){
+    if (canCollide) {
       for (int i = 0; i < asteroids.size(); i++) {
         Asteroid currentAsteroid = asteroids.get(i);
-        for (int j=0; j < bullets.length; j++) {
+
+        for (int j = 0; j < bullets.length; j++) {
           Bullets currentBullet = bullets[j];
-          if (collider.detectCollision(currentAsteroid, currentBullet.getLocation()) && bullets[j].getActive()) {
+
+          if (collider.detectCollision(currentAsteroid, 
+            currentBullet.getLocation()) && bullets[j].getActive()) {
             asteroidShot(i, true);
             bullets[j].setActive(false);
-            explosion.play();
           }
         }
       }
     }
   }
 
+
   /**
-  * Function: checkCollisionsVsPlayer()
-  *
-  * @param Nil
-  *
-  * @return void
-  *
-  * Desc: Calls the CollisionDetect.detectCollision() method on each asteroid in the asteroids ArrayList
-  *       against the player object
-  *
-  * Calls: CollisionDetect.detectCollision()
-  *        explosion.play()
-  *        Player.setAlive()
-  *        Player.getBoundingBox()
-  *        ArrayList<Asteroid>.get()
-  *        ArrayList<Asteroid>.size()
-  *
-  * Affects: ArrayList<Asteroid> asteroids
-  *          Player player
-  */
+   * Function: checkCollisionsVsPlayer()
+   *
+   * @param Nil
+   *
+   * @return void
+   *
+   * Desc: Calls the CollisionDetect.detectCollision() method on each asteroid 
+   *       in the asteroids ArrayList against the player object
+   *
+   * Calls: CollisionDetect.detectCollision()
+   *        explosion.play()
+   *        Player.setAlive()
+   *        Player.getBoundingBox()
+   *        ArrayList<Asteroid>.get()
+   *        ArrayList<Asteroid>.size()
+   *
+   * Affects: ArrayList<Asteroid> asteroids
+   *          Player player
+   */
   public void checkCollisionsVsPlayer() {
     if (canCollide) {
       for (int i = 0; i < asteroids.size(); i++) {
         Asteroid currentAsteroid = asteroids.get(i);
-        if (collider.detectCollision(currentAsteroid, player.getBoundingBox())) {
-          //asteroids.remove(i);
+
+        if (collider.detectCollision(currentAsteroid, 
+          this.player.getBoundingBox())) {
           asteroidShot(i, false);
-          explosion.play();
-          player.setAlive(false);
+          this.player.setAlive(false);
         }
       }
     }
   }
-  
+
+
   /**
-  * Function: checkCollisionsVsShield()
-  *
-  * @param Nil
-  *
-  * @return void
-  *
-  * Desc: Calls the CollisionDetect.detectCollision() method on each asteroid in the asteroids ArrayList
-  *       against the shield objects
-  *
-  * Calls: CollisionDetect.detectCollision()
-  *        explosion.play()
-  *        ArrayList<Asteroid>.get()
-  *        ArrayList<Asteroid>.size()
-  *
-  * Affects: ArrayList<Asteroid> asteroids
-  *          Shield shield
-  */
+   * Function: checkCollisionsVsShield()
+   *
+   * @param Nil
+   *
+   * @return void
+   *
+   * Desc: Calls the CollisionDetect.detectCollision() method on each asteroid 
+   *       in the asteroids ArrayList
+   *       against the shield objects
+   *
+   * Calls: CollisionDetect.detectCollision()
+   *        explosion.play()
+   *        ArrayList<Asteroid>.get()
+   *        ArrayList<Asteroid>.size()
+   *
+   * Affects: ArrayList<Asteroid> asteroids
+   *          Shield shield
+   */
   public void checkCollisionsVsShield() {
     if (canCollide) {
       for (int i = 0; i < asteroids.size(); i++) {
         Asteroid currentAsteroid = asteroids.get(i);
+
         for (int j = 0; j < 4; j++) {
-          if (collider.detectCollision(currentAsteroid, new PVector(shield.sx[j], shield.sy[j])) && shield.shieldDest[j] == 0){ 
+          if (collider.detectCollision(currentAsteroid, 
+            new PVector(shield.sx[j], shield.sy[j])) 
+            && shield.shieldDest[j] == 0) { 
             asteroidShot(i, true);
-            explosion.play();
-            shield.shieldDest[j] = 1;
+            this.shield.shieldDest[j] = 1;
           }
         }
-      }      
+      }
     }
   }
+
 
   /**
    * Function: createBullet()
@@ -809,12 +853,12 @@ class Controller {
    * Affects: Bullets objects array
    */
   public void createBullet() {
-    if (gameStarted && ! waitingForEnter) {
+    if (gameStarted && !waitingForEnter) {
       Bullets bullet = new Bullets(player.getLocation(), player.getBearing());
-      laser.play();
       bullets = (Bullets[]) append(bullets, bullet);
     }
   }
+
 
   /**
    * Function: updateBullets()
@@ -832,14 +876,22 @@ class Controller {
    * Affects: Bullets objects array
    */
   public void updateBullets() {
-    for (int i = 0; i<bullets.length; i++) {
+    boolean noBullets = true;
+
+    for (int i = 0; i < bullets.length; i++) {
       if (bullets[i].getActive()) {
         bullets[i].drawBullets();
         bullets[i].updateBullets();
         bullets[i].checkEdges();
+        noBullets = false;
+      }
+
+      if (noBullets) {
+        this.bullets = new Bullets[0];
       }
     }
   }
+
 
   /**
    * Function: checkNewLevel()
@@ -863,6 +915,7 @@ class Controller {
     }
   }
 
+
   /**
    * Function: calcAsteroidsToGenerate()
    *
@@ -870,10 +923,10 @@ class Controller {
    *
    * @return void
    *
-   * Desc: Calculates the number of asteroids to generate based on the player level
-   *       with 1 new asteroid added at each 3rd level.
+   * Desc: Calculates the number of asteroids to generate based on the player 
+   *       levelwith 1 new asteroid added at each 3rd level.
    *
-   * Calls: 
+   * Calls: Nil
    *
    * Affects: asteroidsToGenerate
    */
@@ -883,15 +936,17 @@ class Controller {
     }
   }
 
+
   /**
    * Function: asteroidShot()
    *
-   * @param asteroidIndex Int    The index of the asteroid within ArrayList asteroids that was shot
+   * @param asteroidIndex Int - The index of the asteroid within ArrayList 
+   *                             asteroids that was shot
    *
    * @return void
    *
-   * Desc: Destroys the asteroid that has been shot and if it is not at the smallest size replaces it
-   *       with NEW_ASTEROIDS_ON_DEST asteroids
+   * Desc: Destroys the asteroid that has been shot and if it is not at the 
+   *       smallest size replaces it with NEW_ASTEROIDS_ON_DEST asteroids.
    *
    * Calls: Asteroid.getSize()
    *        Asteroid.getLocation()
@@ -904,19 +959,23 @@ class Controller {
   public void asteroidShot(int asteroidIndex, boolean byWeapon) {
     Asteroid asteroid = asteroids.get(asteroidIndex);
     asteroids.remove(asteroidIndex);
+
     if (byWeapon) {
       player.addScore(asteroid.getPointsValue());
     }
+
     if (asteroid.getSize() > 1) {
       PVector destroyLocation = asteroid.getLocation();
-      addNewAsteroids(NEW_ASTEROIDS_ON_DEST, destroyLocation, asteroid.getSize() - 1);
+      addNewAsteroids(NEW_ASTEROIDS_ON_DEST, destroyLocation, 
+        asteroid.getSize() - 1);
     }
   }
+
 
   /**
    * Function: addNewAsteroids()
    *
-   * @param numberOfAsteroids int    The number of asteroids to add
+   * @param numberOfAsteroids int - The number of asteroids to add
    *
    * @return int
    *
@@ -926,17 +985,19 @@ class Controller {
    *
    * Affects: ArrayList<Asteroid> asteroids
    */
-  public void addNewAsteroids(int numberOfAsteroids, PVector location, int size) {
+  public void addNewAsteroids(int numberOfAsteroids, PVector location, 
+    int size) {
     for (int i = 0; i < numberOfAsteroids; i++) {
-      asteroids.add(generateAsteroid(size, location));
+      this.asteroids.add(generateAsteroid(size, location));
     }
   }
+
 
   /**
    * Function: generateAsteroid()
    *
-   * @param size int     The size of the asteroid to create.
-   * @param location PVector   The location to generate the asteroid in.
+   * @param size int - The size of the asteroid to create.
+   * @param location PVector - The location to generate the asteroid in.
    *
    * @return Asteroid
    *
@@ -950,13 +1011,30 @@ class Controller {
    */
   private Asteroid generateAsteroid(int size, PVector location) {
     Asteroid newAsteroid = new Asteroid(size, location);
-    newAsteroid.setVelocity(randomVelocity(newAsteroid.MIN_SPEED, newAsteroid.MAX_SPEED));
+    newAsteroid.setVelocity(randomVelocity(newAsteroid.MIN_SPEED, 
+      newAsteroid.MAX_SPEED));
+
     return(newAsteroid);
   }
 
+
+  /**
+   * Function: newShield()
+   *
+   * @param Nil
+   *
+   * @return void
+   *
+   * Desc: Creates new shield on player respawn.
+   *
+   * Calls: Nil        
+   *
+   * Affects: Nil
+   */
+
   public void newShield() {
     if (player.alive == false) {
-      for (int s = 0; s <shield.shieldDest.length; s++) {
+      for (int s = 0; s < shield.shieldDest.length; s++) {
         shield.shieldDest[s] = 1;
       }
     } else {
@@ -965,6 +1043,7 @@ class Controller {
       }
     }
   }
+
 
   /**
    * Function: updateShield()
@@ -981,12 +1060,10 @@ class Controller {
    * Affects: Shield object
    */
   public void updateShield() {
-    shield.shieldPopulate(player.getLocation());
-    shield.drawShield();
-    //for(int i = 0; i<shield.circle.length; i++){
-    //  shape(shield.circle[i]);
-    //}
+    this.shield.shieldPopulate(player.getLocation());
+    this.shield.drawShield();
   }  
+
 
   /**
    * Function: getGameOver()
@@ -997,11 +1074,12 @@ class Controller {
    *
    * Desc: Returns the state of the gameOver boolean.
    *
-   * Calls: nil
+   * Calls: Nil
    *
-   * Affects: nil
+   * Affects: Nil
    */
   public boolean getGameOver() {
+
     return this.gameOver;
   }
 }
