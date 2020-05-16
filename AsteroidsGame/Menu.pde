@@ -46,7 +46,6 @@ class Menu {
    * Desc: Returns the number of items in the menu 
    */
   public int getMenuLength() {
-
     return(this.menuItems.size());
   }
 
@@ -61,7 +60,6 @@ class Menu {
    * Desc: Returns the text of a specified menu item in the array
    */
   public String getMenuItems(int index) {
-
     return(this.menuItems.get(index));
   }
 

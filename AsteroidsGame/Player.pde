@@ -121,7 +121,6 @@ class Player {
    * Affects: Nil 
    */
   public int getScore() {
-    
     return this.score;
   }
 
@@ -140,7 +139,6 @@ class Player {
    * Affects: Nil
    */
   public int getLives() {
-    
     return this.lives;
   }
 
@@ -159,7 +157,6 @@ class Player {
    * Affects: Nil 
    */
   public boolean getAlive() {
-    
     return this.alive;
   }
 
@@ -178,7 +175,6 @@ class Player {
    * Affects: Nil 
    */
   public float getBearing() {
-    
     return this.bearing;
   }
 
@@ -197,7 +193,6 @@ class Player {
    * Affects: Nil
    */
   public PVector getVelocity() {
-    
     return this.velocity;
   }
 
@@ -216,7 +211,6 @@ class Player {
    * Affects: Nil
    */
   public PVector getLocation() {
-  
     return this.location;
   }
 
@@ -377,7 +371,6 @@ class Player {
    * Affects: velocity
    */
   public void accelerate(float speed) {
-
     if (this.bearing <= 90) {
       this.velocity.add(this.bearing * speed, (90 - this.bearing) * speed 
         * -1 );
@@ -440,9 +433,9 @@ class Player {
    * Affects: velocity
    */
   public void decelerate() {
-
     if (this.velocity.x < -DRIFT || this.velocity.x > DRIFT
       || this.velocity.y < -DRIFT || this.velocity.y > DRIFT) {
+
       this.velocity.mult(DECELERATION);
     }
 

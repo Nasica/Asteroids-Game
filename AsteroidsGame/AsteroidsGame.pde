@@ -20,7 +20,7 @@ Controller controller;
 
 void setup() {
   size(800, 800);
-  frameRate(40);
+  frameRate(60);
   textSize(15);
   controller = new Controller();
 }
@@ -29,7 +29,7 @@ void setup() {
 void draw() {
   background(0);
   controller.drawAllAsteroids();
-  controller.updateShip(); 
+  controller.updateShip();
   controller.moveShip();
   controller.checkCollisionsVsBullets();
   controller.checkCollisionsVsPlayer();
@@ -50,7 +50,7 @@ void keyPressed() {
   if (key == CODED) {
   
     if (keyCode == UP) {
-      controller.setSUP(true); 
+      controller.setSUP(true);
       controller.moveMenu();
     }
     
@@ -69,7 +69,7 @@ void keyPressed() {
   }
   
   if (key == ENTER) {
-    controller.menuAction(); 
+    controller.menuAction();
     controller.setENTER(true);
   }
 }

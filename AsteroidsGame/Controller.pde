@@ -72,7 +72,7 @@ class Controller {
    * @param lives int - number of lives player has.
    *
    * Desc: Constructor with lives parameter, creates a new Player object with 
-   * specified number of lives and itialises userInput booleans to false.
+   * specified number of lives and initialises userInput booleans to false.
    */
   Controller(int lives) {
     this.player = new Player(lives);
@@ -98,7 +98,7 @@ class Controller {
    * @param score int - Player score.
    *
    * Desc: Constructor with lives and score parameters, creates a new Player 
-   *       object with specified score and number of lives and itialises 
+   *       object with specified score and number of lives and initialises 
    *       userInput booleans to false.
    */
   Controller(int lives, int score) {
@@ -396,7 +396,6 @@ class Controller {
    * Affects: Nil 
    */
   public boolean getGameState() {
-
     return(this.gameStarted);
   }
 
@@ -468,7 +467,7 @@ class Controller {
     } else {
       canCollide = false;
       textAlign(CENTER);
-      text("GAME OVER", width / 2, height + 50 / 2 - textWidth("GAME")); 
+      text("GAME OVER", width / 2, height + 50 / 2 - textWidth("GAME"));
       checkHighScore(player.getScore());
       waitingForEnter = true;
       waitForEnterPress();
@@ -546,7 +545,7 @@ class Controller {
    * Affects: Nil
    */
   private PVector randomPointOnCirc() {
-    float radius = sqrt(sq(width) + sq(height));  
+    float radius = sqrt(sq(width) + sq(height));
     float angle = random(359) * TWO_PI;
     float xPoint = cos(angle) * radius;
     float yPoint = sin(angle) * radius;
@@ -710,14 +709,16 @@ class Controller {
         currentAsteroid.updatePosition();
 
         if (currentAsteroid.getLocation().x > width 
-          || currentAsteroid.getLocation().x 
-          < -currentAsteroid.getImageSize().x) {
+            || currentAsteroid.getLocation().x 
+            < -currentAsteroid.getImageSize().x) {
+
           currentAsteroid.wrapXAxis();
         }
 
         if (currentAsteroid.getLocation().y > height 
-          || currentAsteroid.getLocation().y 
-          < -currentAsteroid.getImageSize().y) {
+            || currentAsteroid.getLocation().y 
+            < -currentAsteroid.getImageSize().y) {
+
           currentAsteroid.wrapYAxis();
         }
 
@@ -735,7 +736,7 @@ class Controller {
    * @return void
    *
    * Desc: Calls the CollisionDetect.detectCollision() method on each asteroid 
-   *       in the asteroids ArrayListcagainst the bullet objects.
+   *       in the asteroids ArrayList against the bullet objects.
    *
    * Calls: CollisionDetect.detectCollision()
    *        explosion.play()
@@ -756,7 +757,8 @@ class Controller {
           Bullets currentBullet = bullets[j];
 
           if (collider.detectCollision(currentAsteroid, 
-            currentBullet.getLocation()) && bullets[j].getActive()) {
+              currentBullet.getLocation()) && bullets[j].getActive()) {
+
             asteroidShot(i, true);
             bullets[j].setActive(false);
           }
@@ -792,7 +794,8 @@ class Controller {
         Asteroid currentAsteroid = asteroids.get(i);
 
         if (collider.detectCollision(currentAsteroid, 
-          this.player.getBoundingBox())) {
+            this.player.getBoundingBox())) {
+
           asteroidShot(i, false);
           this.player.setAlive(false);
         }
@@ -827,8 +830,9 @@ class Controller {
 
         for (int j = 0; j < 4; j++) {
           if (collider.detectCollision(currentAsteroid, 
-            new PVector(shield.sx[j], shield.sy[j])) 
-            && shield.shieldDest[j] == 0) { 
+              new PVector(shield.sx[j], shield.sy[j])) 
+              && shield.shieldDest[j] == 0) { 
+
             asteroidShot(i, true);
             this.shield.shieldDest[j] = 1;
           }
@@ -876,18 +880,11 @@ class Controller {
    * Affects: Bullets objects array
    */
   public void updateBullets() {
-    boolean noBullets = true;
-
     for (int i = 0; i < bullets.length; i++) {
       if (bullets[i].getActive()) {
         bullets[i].drawBullets();
         bullets[i].updateBullets();
         bullets[i].checkEdges();
-        noBullets = false;
-      }
-
-      if (noBullets) {
-        this.bullets = new Bullets[0];
       }
     }
   }

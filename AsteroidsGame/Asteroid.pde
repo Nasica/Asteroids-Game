@@ -14,7 +14,6 @@
 class Asteroid {
   private int size;
   private int scoreValue;
-  private float rotationalSpeed;
   private PVector location;
   private PVector velocity;
   private PImage asteroidImg;
@@ -22,8 +21,6 @@ class Asteroid {
   private boolean clockwiseRotation;
   public final int MIN_SPEED = 1;
   public final int MAX_SPEED = 5;
-  private final float MIN_ROT_SPEED = 0.1;
-  private final float MAX_ROT_SPEED = 3;
 
   // Constructor
 
@@ -40,7 +37,6 @@ class Asteroid {
     this.location = new PVector(location.x, location.y);
     this.velocity = new PVector(0, 0);
     this.clockwiseRotation = randomBool();
-    this.rotationalSpeed = random(MIN_ROT_SPEED, MAX_ROT_SPEED);
     setImage();
     this.scoreValue = 2000 - ((size - 1) * 500);
   }
@@ -276,6 +272,7 @@ class Asteroid {
       this.location = new PVector(
         (this.location.x - width - asteroidImg.width), 
         this.location.y);
+
     } else {
       this.location = new PVector(
         (this.location.x + width + asteroidImg.width), 
@@ -303,6 +300,7 @@ class Asteroid {
     if (this.location.y > height) {
       this.location = new PVector(this.location.x, 
         (this.location.y - height - asteroidImg.height));
+
     } else {
       this.location = new PVector(this.location.x, 
         (this.location.y + height + asteroidImg.height));
