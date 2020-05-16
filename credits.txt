@@ -1,15 +1,7 @@
-# Delete unrequired credits.
-
-spaceship.png and spaceshipHit.png taken from ships_and_aliens_mothership.png (source: https://opengameart.org/content/spaceships-7) by Ho Nguyen licenced under CC-BY 4.0 https://creativecommons.org/licenses/by/4.0/
-
-ship1.png by Skorpio (source: https://opengameart.org/content/spaceship-4) Licenced under CC-BY-SA 3.0 http://creativecommons.org/licenses/by-sa/3.0/
-
-ship1.png by Skorpio (source: https://opengameart.org/content/2d-spaceship-7-wubitog) licenced under CC-BY-SA 3.0 http://creativecommons.org/licenses/by-sa/3.0/
-
-AsteroidBrown.png by FunwithPixels (source: https://opengameart.org/content/brown-asteroid) licenced under CC-BY 4.0 https://creativecommons.org/licenses/by/4.0/
-
-LayeredRock.png by FunwithPixels (source: https://opengameart.org/content/a-layered-asteroid-rock) licenced under CC-BY 4.0 https://creativecommons.org/licenses/by/4.0/
+spaceship.png taken from ships_and_aliens_mothership.png (source: https://opengameart.org/content/spaceships-7) by Ho Nguyen licenced under CC-BY 4.0 https://creativecommons.org/licenses/by/4.0/
 
 flame.png by Prinsu-Kun (source: https://opengameart.org/content/blue-fire-effect) licenced under CC-BY 3.0 http://creativecommons.org/licenses/by/3.0/
 
 explosion.png by Bleed (source: https://opengameart.org/content/simple-explosion-bleeds-game-art) licenced under CC-BY 3.0 http://creativecommons.org/licenses/by/3.0/
+
+a10002.png, c10000.png, and c10001.png taken from asteroids.zip (https://opengameart.org/content/asteroids) by phaelex licenced under CC-BY-SA 3.0 https://creativecommons.org/licenses/by-sa/3.0/

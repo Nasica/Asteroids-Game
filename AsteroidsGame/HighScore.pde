@@ -1,20 +1,23 @@
 /*
 *  High Score class.
-*  
-*  @author Luke Dart, Scott Dimmock, Mark Gatus
-*  @version 0.1
-*  
-*  Filename: HighScore.pde
-*  Date:     27 March 2020
-*  Updated:  13 May 2020 
-*
-*/
+ *  
+ *  @author Luke Dart, Scott Dimmock, Mark Gatus
+ *  @version 1.0
+ *  @since 15 May 2020 (Normalised by Luke Dart)
+ *
+ *  Filename: HighScore.pde
+ *  Date:     27 March 2020 
+ *
+ */
 
-class HighScore{
-  // Adapted by Luke Dart from COSC101 Assignment 2 2020 T1 by Luke Dart
-  
+
+class HighScore {
+  // Adapted by Luke Dart from COSC101 Assignment 2 2020 T1 by Luke Dart.
+
   private String score;
-  
+
+  // Constructor
+
   /**
    * Function: HighScore()
    *
@@ -24,16 +27,16 @@ class HighScore{
    *
    * Desc: Empty Constructor creates a new default HighScore object.
    */
-  public HighScore(){
+  public HighScore() {
     this.score = "Not set";
   }
-  
+
   // Accessors
-  
-   /**
+
+  /**
    * Function: getScore()
    * 
-   * @param nil
+   * @param Nil
    *
    * @return String
    *
@@ -41,16 +44,15 @@ class HighScore{
    *
    * calls: Nil
    *
-   * Affects: nil
+   * Affects: Nil
    */
-  public String getScore(){
+  public String getScore() {
     return this.score;
   }
-  
-  
+
   // Mutators
-  
-   /**
+
+  /**
    * Function: setScore()
    * 
    * @param score int - The score to set the object too.
@@ -63,39 +65,39 @@ class HighScore{
    *
    * Affects: score
    */
-  public void setScore(int score){
+  public void setScore(int score) {
     this.score = str(score);
   }
-  
-  
-  // Public methods
-  
-   /**
+
+  // Void Methods
+
+  /**
    * Function: initialise()
    * 
-   * @param nil
+   * @param Nil
    *
    * @return void
    *
-   * desc: Retrieves the score from the highscore.txt file and loads it into the object.
+   * desc: Retrieves the score from the highscore.txt file and loads it into 
+   *       the object.
    *
    * calls: Nil
    *
-   * Affects: sUP
+   * Affects: score
    */
-  public void initialise(){
+  public void initialise() {
     String[] fromFile = loadStrings("highscore.txt");
-    
-    if(fromFile.length > 0){
+
+    if (fromFile.length > 0) {
       this.score = fromFile[0];
     }
-    
   }
-  
-   /**
+
+
+  /**
    * Function: store()
    * 
-   * @param nil
+   * @param Nil
    *
    * @return void
    *
@@ -103,14 +105,15 @@ class HighScore{
    *
    * calls: saveStrings()
    *
-   * Affects: nil
+   * Affects: Nil
    */
-  public void store(){
+  public void store() {
     String[] newScore = {this.score};
     saveStrings("highscore.txt", newScore);
   }
-  
-   /**
+
+
+  /**
    * Function: isHighest()
    * 
    * @param score int - The score to check against.
@@ -123,15 +126,13 @@ class HighScore{
    *
    * Affects: Nil
    */
-  public boolean isHighest(int score){
-    if(score > int(this.score)){
+  public boolean isHighest(int score) {
+    if (score > int(this.score)) {
+
       return true;
-    }
-    
-    else{
+    } else {
+
       return false;
     }
   }
-  
-  
-  }
+}
