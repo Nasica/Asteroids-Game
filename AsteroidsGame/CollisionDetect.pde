@@ -5,7 +5,7 @@
  *  @version 1.0
  *  @since 15 May 2020 (Normalised by Luke Dart)
  *  
- *  Filename: Asteroid.pde
+ *  Filename: CollisionDetect.pde
  *  Date:     27 March 2020 
  *
  */
@@ -35,7 +35,7 @@ public class CollisionDetect {
       PVector v = ship.getVertex(i);
 
       if ((dist(asteroid.getLocation().x, asteroid.getLocation().y, 
-        v.x, v.y) - asteroid.getImageSize().x / 4) < 0) {
+          v.x, v.y) - asteroid.getImageSize().x / 4) < 0) {
 
         return(true);
       }
@@ -66,7 +66,7 @@ public class CollisionDetect {
    */
   public boolean detectCollision(Asteroid asteroid, PVector point) {
     if ((dist(asteroid.getLocation().x, asteroid.getLocation().y, 
-      point.x, point.y) - asteroid.getImageSize().x / 4) < 0) {
+        point.x, point.y) - asteroid.getImageSize().x / 4) < 0) {
 
       return(true);
     }

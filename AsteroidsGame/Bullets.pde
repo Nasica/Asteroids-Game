@@ -36,7 +36,7 @@ class Bullets {
     this.bearing = shipBearing;
 
     if (this.bearing <= 90) {
-      this.velocity = new PVector(this.bearing * SHOT_SPEED, (90 -this.bearing) 
+      this.velocity = new PVector(this.bearing * SHOT_SPEED, (90 -this.bearing)
         * SHOT_SPEED * - 1);
     } else if (bearing <= 180) {
       this.velocity = new PVector((180 - this.bearing) * SHOT_SPEED, 
