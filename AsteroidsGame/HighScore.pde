@@ -8,6 +8,8 @@
  *  Filename: HighScore.pde
  *  Date:     27 March 2020 
  *
+ *  Desc: The HighScore class contains methods for the use of a persistant
+ *        high score saved to a local text file.
  */
 
 

@@ -7,6 +7,9 @@
  *
  *  Filename: Shield.pde
  *  Date:     14 April 2020
+ *
+ *  Desc: The Shield class represents the shield object for use in the
+ *        Asteroids Game
  */
 
 

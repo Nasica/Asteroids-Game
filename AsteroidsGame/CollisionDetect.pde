@@ -8,6 +8,8 @@
  *  Filename: CollisionDetect.pde
  *  Date:     27 March 2020 
  *
+ *  Desc: The CollisionDetect class contains methods for calculating if a
+ *        collision has occured between various types of objects.
  */
 
 

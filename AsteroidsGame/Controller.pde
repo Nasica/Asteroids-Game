@@ -8,6 +8,8 @@
  *  Filename: Controller.pde
  *  Date:     27 March 2020
  *
+ *  Desc: The Controller class contains all the methods for interfacing all the
+ *        required objects in order to run the Asteroids game
  */
 
 
