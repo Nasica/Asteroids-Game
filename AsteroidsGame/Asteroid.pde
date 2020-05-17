@@ -1,5 +1,5 @@
 /*
-*  Asteroid class.
+ *  Asteroid class.
  *  
  *  @author Luke Dart, Scott Dimmock, Mark Gatus
  *  @version 1.0
