@@ -223,7 +223,7 @@ class Controller {
    *
    * calls: Nil
    *
-   * Affects: sUP
+   * Affects: Nil 
    */
   public void moveShip() {
     if (sUP && gameStarted) {
