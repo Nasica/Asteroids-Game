@@ -7,6 +7,10 @@
  *  
  *  Filename: Menu.pde
  *  Date:     09 May 2020
+ *
+ *  Desc: The Menu class contains the structure required to instantiate other
+ *        menu object. Child classes should be used to interface with this 
+ *        class.
  */
 
 
@@ -104,6 +108,8 @@ class Menu {
  *  Filename: Menu.pde
  *  Date:     09 May 2020
  *
+ *  Desc: The MainMenu class contains the description for the main menu of
+ *        the asteroids game.
  */
 
 

@@ -1,5 +1,5 @@
 /*
-*  Asteroid class.
+ *  Asteroid class.
  *  
  *  @author Luke Dart, Scott Dimmock, Mark Gatus
  *  @version 1.0
@@ -8,6 +8,8 @@
  *  Filename: Asteroid.pde
  *  Date:     27 March 2020
  *
+ *  Desc: The Asteroid class represents an asteroid object for use in the
+ *        Asteroids game.
  */
 
 

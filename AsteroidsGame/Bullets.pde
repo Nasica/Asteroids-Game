@@ -7,6 +7,9 @@
  *
  *  Filename: Bullets.pde
  *  Date:     24 April 2020
+ *
+ *  Desc: The Bullet class represents bullet objects for use in the
+ *        Asteroids game.
  */
 
 

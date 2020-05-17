@@ -7,6 +7,9 @@
  *
  *  Filename: Player.pde
  *  Date:     27 March 2020
+ *
+ *  Desc: The Player class represents a player object for use in the 
+ *        Asteroids game.
  */
 
 

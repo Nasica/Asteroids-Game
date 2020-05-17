@@ -6,14 +6,20 @@
  *  @since 15 May 2020 (Normalised by Luke Dart)
  * Course: COSC101 - Software Development Studio 1
  *
- * Desc: Astroids is a modern remake of the retro classic.
- *       Due to technological advances, the player ship now comes equipped
- *       with a standard four-phase pulsating shield for your protection!
+ * Desc:     Astroids is a modern remake of the retro classic.
+ *           Due to technological advances, the player ship now comes equipped
+ *           with a standard four-phase pulsating shield for your protection!
+ *           You have been provided with 3 ships to protect us all from
+ *           destruction by the unending asteroid field that has engulfed us.
+ *           Good luck!
  *
- * Usage: Run in the processing environment and select Play Game.
- *        Press enter after end of game to play again or select exit.
- 
- * Notes: Third party assets used with permission as found in credits.txt
+ * Usage:    Run in the processing environment and select Play Game.
+ *           Press enter after end of game to play again or select exit.
+ *
+ * Controls: Use the Up, Left and Right keys to controll the ship. 
+             The Space bar is used to fire the weapon. 
+ *
+ * Notes:    Third party assets used with permission as found in credits.txt
  **************************************************************/
 
 Controller controller;
